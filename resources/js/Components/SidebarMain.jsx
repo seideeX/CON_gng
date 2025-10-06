@@ -8,17 +8,38 @@ import {
     LogoIcon,
     SidebarHeader,
 } from "@/Components/ui/sidebar";
-import {
-    IconArrowLeft,
-    IconBrandTabler,
-    IconSettings,
-    IconUserBolt,
-} from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { router } from "@inertiajs/react";
+import {
+    ListChecks,
+    Shirt,
+    Droplet,
+    Award,
+    User,
+    Package,
+    Star,
+    LogOut,
+} from "lucide-react";
 
 export default function SidebarMain({ children, user }) {
     const [open, setOpen] = useState(false);
+
+    const mainLinks = [
+        {
+            label: "Production Number",
+            icon: <ListChecks />,
+            route: "production_number",
+        },
+        { label: "Casual Wear", icon: <Shirt />, route: "casual_wear" },
+        { label: "Swim Wear", icon: <Droplet />, route: "swim_wear" },
+        { label: "Formal Wear", icon: <Award />, route: "formal_wear" },
+    ];
+
+    const top5Links = [
+        { label: "Beauty of the Face and Figure", icon: <User /> },
+        { label: "Delivery", icon: <Package /> },
+        { label: "Over-all Appeal/X-factor", icon: <Star /> },
+    ];
 
     return (
         <div className="dark">
@@ -38,39 +59,30 @@ export default function SidebarMain({ children, user }) {
 
                             {/* Main links */}
                             <div className="mt-2 flex flex-col gap-2">
-                                {[
-                                    {
-                                        label: "Production Number",
-                                        icon: <IconBrandTabler />,
-                                    },
-                                    {
-                                        label: "Casual Wear",
-                                        icon: <IconUserBolt />,
-                                    },
-                                    {
-                                        label: "Swim Wear",
-                                        icon: <IconSettings />,
-                                    },
-                                    {
-                                        label: "Formal Wear",
-                                        icon: <IconSettings />,
-                                    },
-                                ].map((link, idx) => {
-                                    const iconElement = link.icon
-                                        ? React.cloneElement(link.icon, {
-                                              className:
-                                                  "h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200",
-                                          })
-                                        : null;
+                                {mainLinks.map((link, idx) => {
+                                    const iconElement = React.cloneElement(
+                                        link.icon,
+                                        {
+                                            className:
+                                                "h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200",
+                                        }
+                                    );
 
                                     return (
                                         <SidebarLink
                                             key={idx}
                                             link={{
-                                                ...link,
+                                                label: link.label,
                                                 icon: iconElement,
+                                                href: "#", // href is required but will be handled via onClick
                                                 className:
                                                     "text-neutral-700 dark:text-neutral-200",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    router.get(
+                                                        route(link.route)
+                                                    );
+                                                },
                                             }}
                                         />
                                     );
@@ -80,28 +92,16 @@ export default function SidebarMain({ children, user }) {
                             {/* Top 5 section header */}
                             <SidebarHeader label="Top 5 Finalist" />
 
-                            {/* Top 5 links with icons */}
+                            {/* Top 5 links */}
                             <div className="mt-2 flex flex-col gap-2">
-                                {[
-                                    {
-                                        label: "Beauty of the Face and Figure",
-                                        icon: <IconBrandTabler />,
-                                    },
-                                    {
-                                        label: "Delivery",
-                                        icon: <IconUserBolt />,
-                                    },
-                                    {
-                                        label: "Over-all Appeal/X-factor",
-                                        icon: <IconSettings />,
-                                    },
-                                ].map((link, idx) => {
-                                    const iconElement = link.icon
-                                        ? React.cloneElement(link.icon, {
-                                              className:
-                                                  "h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200",
-                                          })
-                                        : null;
+                                {top5Links.map((link, idx) => {
+                                    const iconElement = React.cloneElement(
+                                        link.icon,
+                                        {
+                                            className:
+                                                "h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200",
+                                        }
+                                    );
 
                                     return (
                                         <SidebarLink
@@ -129,7 +129,7 @@ export default function SidebarMain({ children, user }) {
                                     href: "#",
                                     icon: (
                                         <img
-                                            src="https://assets.aceternity.com/manu.png"
+                                            src="/isu-logo.png"
                                             className="h-7 w-7 shrink-0 rounded-full"
                                             width={50}
                                             height={50}
@@ -145,7 +145,7 @@ export default function SidebarMain({ children, user }) {
                                     label: "Logout",
                                     href: "#",
                                     icon: (
-                                        <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                                        <LogOut className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
                                     ),
                                     onClick: (e) => {
                                         e.preventDefault();
@@ -159,7 +159,9 @@ export default function SidebarMain({ children, user }) {
                     </SidebarBody>
                 </Sidebar>
 
-                <div className="flex flex-1">{children}</div>
+                <div className="flex-1 flex flex-col h-full border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900 overflow-y-auto">
+                    {children}
+                </div>
             </div>
         </div>
     );

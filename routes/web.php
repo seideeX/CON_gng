@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CandidateController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -17,6 +18,14 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+// Categories Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/production_number',[CandidateController::class, 'production_number'])->name('production_number');
+    Route::get('/casual_wear',[CandidateController::class, 'casual_wear'])->name('casual_wear');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

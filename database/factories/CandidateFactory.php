@@ -17,7 +17,10 @@ class CandidateFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'profile_img' => $this->faker->imageUrl(200, 200, 'people'),
+            'first_name'  => $this->faker->firstName(),
+            'last_name'   => $this->faker->lastName(),
+            'gender'      => $this->faker->randomElement(['male', 'female']),
         ];
     }
 }

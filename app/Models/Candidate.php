@@ -9,4 +9,21 @@ class Candidate extends Model
 {
     /** @use HasFactory<\Database\Factories\CandidateFactory> */
     use HasFactory;
+
+     protected $fillable = [
+        'profile_img',
+        'first_name',
+        'last_name',
+        'gender',
+    ];
+
+    public function topFiveScores()
+    {
+        return $this->hasMany(TopFiveScore::class);
+    }
+    
+    public function topFiveSelectionScores()
+    {
+        return $this->hasMany(TopFiveSelectionScore::class);
+    }   
 }
