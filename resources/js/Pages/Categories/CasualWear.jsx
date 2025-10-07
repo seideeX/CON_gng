@@ -25,7 +25,7 @@ const CasualWear = ({ candidates }) => {
         {
             title: "Female Candidates",
             value: "female",
-            category: "Female Casual Wear", // <-- dynamic heading
+            category: "Female Casual Wear",
             content: (
                 <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {femaleCandidates.map((candidate) => (
