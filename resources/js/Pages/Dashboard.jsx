@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageLayout from "@/Layouts/PageLayout";
 import StarsBackground from "@/Components/backgrounds/stars";
 import { cn } from "@/lib/utils";
 
 export default function Dashboard({ auth }) {
+    const user = auth?.user;
+
+    // Log the user name and role once when the component mounts
+    useEffect(() => {
+        if (user) {
+            console.log("User iD:", user.id);
+            console.log("User Name:", user.name);
+            console.log("User Role:", user.role);
+        } else {
+            console.log("No authenticated user found.");
+        }
+    }, [user]);
     return (
         <PageLayout user={auth?.user}>
             <div className="relative flex-1 w-full h-full rounded-xl overflow-hidden">

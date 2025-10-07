@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -73,16 +73,15 @@ export const Tabs = ({
                 active={active}
                 key={active.value}
                 hovering={hovering}
-                className={cn("mt-24", contentClassName)}
+                className={cn("mt-20", contentClassName)}
             />
         </>
     );
 };
 
 export const FadeInDiv = ({ className, tabs, hovering }) => {
-    const isActive = (tab) => {
-        return tab.value === tabs[0].value;
-    };
+    const isActive = (tab) => tab.value === tabs[0].value;
+
     return (
         <div className="relative w-full h-full">
             {tabs.map((tab, idx) => (
@@ -107,8 +106,14 @@ export const FadeInDiv = ({ className, tabs, hovering }) => {
                         {tab.category}
                     </h2>
 
-                    {/* Original tab content */}
-                    {tab.content}
+                    {/* Call content as function for reactive re-render */}
+                    {tab.content && (
+                        <div className="tab-content">
+                            {typeof tab.content === "function"
+                                ? tab.content()
+                                : tab.content}
+                        </div>
+                    )}
                 </motion.div>
             ))}
         </div>

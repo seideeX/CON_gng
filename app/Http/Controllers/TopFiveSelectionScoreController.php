@@ -7,59 +7,58 @@ use Illuminate\Http\Request;
 
 class TopFiveSelectionScoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    private function storeScores(Request $request, string $category)
     {
-        //
+        $request->validate([
+            'judge_id' => 'required|exists:users,id',
+            'scores' => 'required|array',
+        ]);
+
+        $judgeId = $request->input('judge_id');
+        $scores = $request->input('scores');
+
+        foreach ($scores as $candidateId => $scoreValue) {
+            // Update or create the record for this judge & candidate
+            $record = TopFiveSelectionScore::updateOrCreate(
+                [
+                    'judge_id' => $judgeId,
+                    'candidate_id' => $candidateId,
+                ],
+                [
+                    $category => $scoreValue,
+                ]
+            );
+
+            $record->total_scores =
+                ($record->production_number ?? 0) +
+                ($record->casual_wear ?? 0) +
+                ($record->swim_wear ?? 0) +
+                ($record->formal_wear ?? 0) +
+                ($record->closed_door_interview ?? 0);
+
+            $record->save();
+        }
+
+        return response()->json(['message' => ucfirst(str_replace('_', ' ', $category)) . ' scores saved successfully']);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function production_number_store(Request $request)
     {
-        //
+        return $this->storeScores($request, 'production_number');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function casual_wear_store(Request $request)
     {
-        //
+        return $this->storeScores($request, 'casual_wear');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(TopFiveSelectionScore $topFiveSelectionScore)
+    public function swim_wear_store(Request $request)
     {
-        //
+        return $this->storeScores($request, 'swim_wear');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TopFiveSelectionScore $topFiveSelectionScore)
+    public function formal_wear_store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TopFiveSelectionScore $topFiveSelectionScore)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(TopFiveSelectionScore $topFiveSelectionScore)
-    {
-        //
+        return $this->storeScores($request, 'formal_wear');
     }
 }

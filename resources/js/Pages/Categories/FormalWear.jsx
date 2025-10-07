@@ -7,7 +7,7 @@ import { Tabs } from "@/Components/ui/tabs";
 import CandidateGrid from "./Partials/CandidateGrid";
 import { HoverBorderGradient } from "@/Components/ui/hover-border-gradient";
 
-const CasualWear = ({ candidates }) => {
+const FormalWear = ({ candidates }) => {
     const judgeId = usePage().props.auth.user.id;
 
     const maleCandidates = candidates.filter((c) => c.gender === "male");
@@ -48,7 +48,7 @@ const CasualWear = ({ candidates }) => {
             }
 
             router.post(
-                route("casual_wear.store"), // <-- using route name
+                route("formal_wear.store"), // <-- using route name
                 {
                     judge_id: judgeId,
                     scores: filteredScores,
@@ -94,27 +94,14 @@ const CasualWear = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Male Casual Wear",
+            category: "Male Formal Wear",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
             title: "Female Candidates",
             value: "female",
-            category: "Female Casual Wear",
-<<<<<<< HEAD
-            content: (
-                <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {femaleCandidates.map((candidate) => (
-                        <CandidateCard
-                            key={candidate.id}
-                            candidate={candidate}
-                        />
-                    ))}
-                </div>
-            ),
-=======
+            category: "Female Formal Wear",
             content: <TabContent candidates={femaleCandidates} />,
->>>>>>> d08b0caa90de128fdb3e23315080da174863240a
         },
     ];
 
@@ -129,4 +116,4 @@ const CasualWear = ({ candidates }) => {
     );
 };
 
-export default CasualWear;
+export default FormalWear;
