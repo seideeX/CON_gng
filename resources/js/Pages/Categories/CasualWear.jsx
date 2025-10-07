@@ -48,7 +48,7 @@ const CasualWear = ({ candidates }) => {
             }
 
             router.post(
-                route("casual_wear.store"), // <-- using route name
+                route("production_number.store"), // <-- using route name
                 {
                     judge_id: judgeId,
                     scores: filteredScores,
@@ -67,7 +67,7 @@ const CasualWear = ({ candidates }) => {
             <div className="flex flex-col items-center gap-6">
                 <CandidateGrid
                     candidates={candidates}
-                    maxScore={20}
+                    maxScore={10}
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                 />
@@ -101,20 +101,7 @@ const CasualWear = ({ candidates }) => {
             title: "Female Candidates",
             value: "female",
             category: "Female Casual Wear",
-<<<<<<< HEAD
-            content: (
-                <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {femaleCandidates.map((candidate) => (
-                        <CandidateCard
-                            key={candidate.id}
-                            candidate={candidate}
-                        />
-                    ))}
-                </div>
-            ),
-=======
             content: <TabContent candidates={femaleCandidates} />,
->>>>>>> d08b0caa90de128fdb3e23315080da174863240a
         },
     ];
 
