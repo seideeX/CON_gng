@@ -2,34 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Candidate;
-use Illuminate\Http\Request;
+use App\Repositories\CandidateRepository;
 use Inertia\Inertia;
 
 class CandidateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function production_number()
-    {
-        // Fetch all candidates
-        $candidates = Candidate::all();
+    protected $candidates;
 
-        return Inertia::render('Categories/ProductionNumber', [
+    public function __construct(CandidateRepository $candidates)
+    {
+        $this->candidates = $candidates;
+    }
+    protected function renderCategory(string $view)
+    {
+        $candidates = $this->candidates->all();
+
+        return Inertia::render($view, [
             'candidates' => $candidates,
         ]);
+    }
+
+    public function production_number()
+    {
+        return $this->renderCategory('Categories/ProductionNumber');
     }
 
     public function casual_wear()
     {
-        // Fetch all candidates
-        $candidates = Candidate::all();
-
-        return Inertia::render('Categories/CasualWear', [
-            'candidates' => $candidates,
-        ]);
+        return $this->renderCategory('Categories/CasualWear');
     }
 
+    public function swim_wear()
+    {
+        return $this->renderCategory('Categories/SwimWear');
+    }
 
+    public function formal_wear()
+    {
+        return $this->renderCategory('Categories/FormalWear');
+    }
 }

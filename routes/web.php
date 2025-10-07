@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\TopFiveSelectionScoreController;
+use App\Http\Controllers\ResultController\TopFiveSelectionResultController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -22,9 +24,35 @@ Route::get('/dashboard', function () {
 
 // Categories Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/production_number',[CandidateController::class, 'production_number'])->name('production_number');
-    Route::get('/casual_wear',[CandidateController::class, 'casual_wear'])->name('casual_wear');
+    Route::get('/production_number', [CandidateController::class, 'production_number'])->name('production_number');
+    Route::get('/casual_wear', [CandidateController::class, 'casual_wear'])->name('casual_wear');
+    Route::get('/swim_wear', [CandidateController::class, 'swim_wear'])->name('swim_wear');
+    Route::get('/formal_wear', [CandidateController::class, 'formal_wear'])->name('formal_wear');
 });
+
+// Scores Routes
+Route::middleware('auth')->group(function () {
+    // Production Number
+    Route::post('/production_number/scores', [TopFiveSelectionScoreController::class, 'production_number_store'])
+        ->name('production_number.store');
+    // Casual Wear
+    Route::post('/casual_wear/scores', [TopFiveSelectionScoreController::class, 'casual_wear_store'])
+        ->name('casual_wear.store');
+    // Swim Wear
+    Route::post('/swim_wear/scores', [TopFiveSelectionScoreController::class, 'swim_wear_store'])
+        ->name('swim_wear.store');
+    // Formal Wear
+    Route::post('/formal_wear/scores', [TopFiveSelectionScoreController::class, 'formal_wear_store'])
+        ->name('formal_wear.store');
+});
+
+// Results Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/admin.production_number', [TopFiveSelectionResultController::class, 'productionNumberResults'])
+        ->name('admin.production_number');
+});
+
+
 
 
 Route::middleware('auth')->group(function () {

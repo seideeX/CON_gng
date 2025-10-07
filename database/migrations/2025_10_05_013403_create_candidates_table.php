@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('profile_img');
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('course');
             $table->enum('gender', ['male', 'female']);
             $table->timestamps();
         });

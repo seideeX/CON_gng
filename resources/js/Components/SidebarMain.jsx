@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePage } from "@inertiajs/react";
 import {
     Sidebar,
     SidebarBody,
@@ -21,25 +22,99 @@ import {
     LogOut,
 } from "lucide-react";
 
-export default function SidebarMain({ children, user }) {
+export default function SidebarMain({ children }) {
     const [open, setOpen] = useState(false);
 
-    const mainLinks = [
-        {
-            label: "Production Number",
-            icon: <ListChecks />,
-            route: "production_number",
-        },
-        { label: "Casual Wear", icon: <Shirt />, route: "casual_wear" },
-        { label: "Swim Wear", icon: <Droplet />, route: "swim_wear" },
-        { label: "Formal Wear", icon: <Award />, route: "formal_wear" },
-    ];
+    const { props } = usePage();
+    const user = props.auth?.user; // ✅ get current logged-in user
 
-    const top5Links = [
-        { label: "Beauty of the Face and Figure", icon: <User /> },
-        { label: "Delivery", icon: <Package /> },
-        { label: "Over-all Appeal/X-factor", icon: <Star /> },
-    ];
+    useEffect(() => {
+        if (user) {
+            console.log("User iD:", user.id);
+            console.log("User Name:", user.name);
+            console.log("User Role:", user.role);
+        } else {
+            console.log("No authenticated user found.");
+        }
+    }, [user]);
+
+    // Main links — dynamic based on user role
+    const mainLinks =
+        user?.role === "admin"
+            ? [
+                  {
+                      label: "Production Number",
+                      icon: <ListChecks />,
+                      route: "admin.production_number",
+                  },
+                  {
+                      label: "Casual Wear",
+                      icon: <Shirt />,
+                      route: "admin.casual_wear",
+                  },
+                  {
+                      label: "Swim Wear",
+                      icon: <Droplet />,
+                      route: "admin.swim_wear",
+                  },
+                  {
+                      label: "Formal Wear",
+                      icon: <Award />,
+                      route: "admin.formal_wear",
+                  },
+              ]
+            : [
+                  {
+                      label: "Production Number",
+                      icon: <ListChecks />,
+                      route: "production_number",
+                  },
+                  {
+                      label: "Casual Wear",
+                      icon: <Shirt />,
+                      route: "casual_wear",
+                  },
+                  { label: "Swim Wear", icon: <Droplet />, route: "swim_wear" },
+                  {
+                      label: "Formal Wear",
+                      icon: <Award />,
+                      route: "formal_wear",
+                  },
+              ];
+
+    // Top 5 links — dynamic based on user role
+    const top5Links =
+        user?.role === "admin"
+            ? [
+                  {
+                      label: "Manage Judges",
+                      icon: <User />,
+                      route: "admin.judges",
+                  },
+                  {
+                      label: "Manage Candidates",
+                      icon: <Package />,
+                      route: "admin.candidates",
+                  },
+                  {
+                      label: "Settings / Reports",
+                      icon: <Star />,
+                      route: "admin.settings",
+                  },
+              ]
+            : [
+                  {
+                      label: "Beauty of the Face and Figure",
+                      icon: <User />,
+                      route: "beauty_face_figure",
+                  },
+                  { label: "Delivery", icon: <Package />, route: "delivery" },
+                  {
+                      label: "Over-all Appeal / X-factor",
+                      icon: <Star />,
+                      route: "overall_appeal",
+                  },
+              ];
 
     return (
         <div className="dark">

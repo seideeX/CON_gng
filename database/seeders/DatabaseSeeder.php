@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Candidate;
+use Database\Seeders\CandidateSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // Create 5 judges
         User::factory()->count(5)->sequence(
-            fn ($sequence) => [
+            fn($sequence) => [
                 'name' => 'judge_' . ($sequence->index + 1),
                 'email' => 'judge' . ($sequence->index + 1) . '@gmail.com',
                 'password' => Hash::make('123'),
@@ -32,10 +32,6 @@ class DatabaseSeeder extends Seeder
             ]
         )->create();
 
-        // Create 5 male candidates
-        Candidate::factory()->count(5)->state(['gender' => 'male'])->create();
-
-        // Create 5 female candidates
-        Candidate::factory()->count(5)->state(['gender' => 'female'])->create();
+        $this->call(CandidateSeeder::class);
     }
 }
