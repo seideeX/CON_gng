@@ -67,7 +67,7 @@ const CasualWear = ({ candidates }) => {
             <div className="flex flex-col items-center gap-6">
                 <CandidateGrid
                     candidates={candidates}
-                    maxScore={10}
+                    maxScore={20}
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                 />

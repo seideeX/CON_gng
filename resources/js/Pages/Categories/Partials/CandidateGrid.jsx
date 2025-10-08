@@ -21,11 +21,13 @@ const CandidateGrid = ({
                           index + 1
                       }.jpg`;
 
+                // Get existing or saved score for this candidate
+                const existingOrSavedScore =
+                    scoresRef.current[candidate.id] ?? candidate.existing_score;
+
                 const handleScoreChange = (val) => {
                     onScoreChange(candidate.id, val);
                 };
-
-                const score = scoresRef.current[candidate.id] ?? "";
 
                 return (
                     <div
@@ -42,7 +44,6 @@ const CandidateGrid = ({
                             <p className="text-xs text-gray-400 mb-1">
                                 #{index + 1}
                             </p>
-
                             <h3 className="font-bold text-white truncate w-full px-2">
                                 {candidate.first_name} {candidate.last_name}
                             </h3>
@@ -58,9 +59,17 @@ const CandidateGrid = ({
                         </div>
 
                         <ScoreInput
-                            value={score}
+                            value={
+                                scoresRef.current[candidate.id] ??
+                                candidate.existing_score ??
+                                ""
+                            }
                             onChange={handleScoreChange}
                             max={maxScore}
+                            disabled={
+                                candidate.existing_score != null &&
+                                candidate.existing_score !== ""
+                            }
                         />
                     </div>
                 );

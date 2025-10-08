@@ -4,8 +4,8 @@ import React from "react";
 import PageLayout from "@/Layouts/PageLayout";
 import ResultTable from "./Partials/ResultTable";
 
-const ProductionNumberResult = ({
-    categoryName = "Production Number",
+const CasualWearResult = ({
+    categoryName = "Casual Wear",
     maleCandidates = [],
     femaleCandidates = [],
     judgeOrder = [],
@@ -32,4 +32,4 @@ const ProductionNumberResult = ({
     );
 };
 
-export default ProductionNumberResult;
+export default CasualWearResult;

@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TopFiveSelectionScore;
+use App\Repositories\TopFiveSelectionScoreRepository;
 use Illuminate\Http\Request;
 
 class TopFiveSelectionScoreController extends Controller
 {
+    protected $scores;
+
+    public function __construct(TopFiveSelectionScoreRepository $scores)
+    {
+        $this->scores = $scores;
+    }
+
     private function storeScores(Request $request, string $category)
     {
         $request->validate([
@@ -18,28 +25,12 @@ class TopFiveSelectionScoreController extends Controller
         $scores = $request->input('scores');
 
         foreach ($scores as $candidateId => $scoreValue) {
-            // Update or create the record for this judge & candidate
-            $record = TopFiveSelectionScore::updateOrCreate(
-                [
-                    'judge_id' => $judgeId,
-                    'candidate_id' => $candidateId,
-                ],
-                [
-                    $category => $scoreValue,
-                ]
-            );
-
-            $record->total_scores =
-                ($record->production_number ?? 0) +
-                ($record->casual_wear ?? 0) +
-                ($record->swim_wear ?? 0) +
-                ($record->formal_wear ?? 0) +
-                ($record->closed_door_interview ?? 0);
-
-            $record->save();
+            $this->scores->updateOrCreateScore($judgeId, $candidateId, $category, $scoreValue);
         }
 
-        return response()->json(['message' => ucfirst(str_replace('_', ' ', $category)) . ' scores saved successfully']);
+        return response()->json([
+            'message' => ucfirst(str_replace('_', ' ', $category)) . ' scores saved successfully'
+        ]);
     }
 
     public function production_number_store(Request $request)

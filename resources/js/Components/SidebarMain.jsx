@@ -45,7 +45,7 @@ export default function SidebarMain({ children }) {
                   {
                       label: "Production Number",
                       icon: <ListChecks />,
-                      route: "admin.production_number",
+                      route: "admin.production_number", // ✅ Use route name
                   },
                   {
                       label: "Casual Wear",
@@ -61,6 +61,11 @@ export default function SidebarMain({ children }) {
                       label: "Formal Wear",
                       icon: <Award />,
                       route: "admin.formal_wear",
+                  },
+                  {
+                      label: "Closed Door Interview",
+                      icon: <User />, // choose an icon, e.g., User
+                      route: "admin.closed_door_interview",
                   },
               ]
             : [

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 
-const ScoreInput = ({ value, onChange, max }) => {
+const ScoreInput = ({ value, onChange, max, disabled = false }) => {
     const [hovered, setHovered] = useState(false);
     const [focused, setFocused] = useState(false);
 
@@ -72,7 +72,8 @@ const ScoreInput = ({ value, onChange, max }) => {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     placeholder={`0.0 / ${max}`}
-                    className="relative z-10 w-full text-center px-4 py-2 rounded-full bg-neutral-900 text-white focus:outline-none focus:bg-neutral-800 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    disabled={disabled} // <-- added
+                    className="relative z-10 w-full text-center px-4 py-2 rounded-full bg-neutral-900 text-white focus:outline-none focus:bg-neutral-800 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
             </div>
         </div>

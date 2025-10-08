@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\CandidateRepository;
+use App\Models\TopFiveSelectionScore;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CandidateController extends Controller
@@ -13,9 +15,27 @@ class CandidateController extends Controller
     {
         $this->candidates = $candidates;
     }
-    protected function renderCategory(string $view)
+
+    protected function renderCategory(string $view, string $categoryField)
     {
         $candidates = $this->candidates->all();
+
+        $user = Auth::user(); // Get the logged-in user
+
+        if (!$user) {
+            abort(403, 'Unauthorized. Please log in as a judge.');
+        }
+
+        $judgeId = $user->id;
+
+        // Load existing scores for the logged-in judge
+        $scores = TopFiveSelectionScore::where('judge_id', $judgeId)
+            ->pluck($categoryField, 'candidate_id');
+
+        // Attach existing score to each candidate
+        foreach ($candidates as $candidate) {
+            $candidate->existing_score = $scores[$candidate->id] ?? null;
+        }
 
         return Inertia::render($view, [
             'candidates' => $candidates,
@@ -24,21 +44,21 @@ class CandidateController extends Controller
 
     public function production_number()
     {
-        return $this->renderCategory('Categories/ProductionNumber');
+        return $this->renderCategory('Categories/ProductionNumber', 'production_number');
     }
 
     public function casual_wear()
     {
-        return $this->renderCategory('Categories/CasualWear');
+        return $this->renderCategory('Categories/CasualWear', 'casual_wear');
     }
 
     public function swim_wear()
     {
-        return $this->renderCategory('Categories/SwimWear');
+        return $this->renderCategory('Categories/SwimWear', 'swim_wear');
     }
 
     public function formal_wear()
     {
-        return $this->renderCategory('Categories/FormalWear');
+        return $this->renderCategory('Categories/FormalWear', 'formal_wear');
     }
 }

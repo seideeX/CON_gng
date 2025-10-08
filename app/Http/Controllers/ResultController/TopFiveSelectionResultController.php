@@ -3,41 +3,74 @@
 namespace App\Http\Controllers\ResultController;
 
 use App\Http\Controllers\Controller;
-use App\Models\TopFiveSelectionScore;
+use App\Services\TopFiveSelectionService;
 use Inertia\Inertia;
 
 class TopFiveSelectionResultController extends Controller
 {
+    protected $service;
+
+    public function __construct(TopFiveSelectionService $service)
+    {
+        $this->service = $service;
+    }
+
     public function productionNumberResults()
     {
-        $scores = TopFiveSelectionScore::with(['candidate', 'judge'])
-            ->get(['id', 'candidate_id', 'judge_id', 'production_number']);
-
-        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5'];
-
-        $candidates = [];
-
-        foreach ($scores as $score) {
-            $candidateId = $score->candidate_id;
-            if (!isset($candidates[$candidateId])) {
-                $candidates[$candidateId] = [
-                    'candidate' => $score->candidate,
-                    'scores' => array_fill_keys($judgeOrder, 0),
-                    'total' => 0,
-                ];
-            }
-
-            $candidates[$candidateId]['scores'][$score->judge->name] = $score->production_number ?? 0;
-        }
-
-        // Calculate total per candidate
-        foreach ($candidates as &$c) {
-            $c['total'] = round(array_sum($c['scores']), 2);
-        }
+        $results = $this->service->getResultsPerCategory('production_number');
 
         return Inertia::render('Admin/ProductionNumberResult', [
-            'candidates' => array_values($candidates),
-            'judgeOrder' => $judgeOrder,
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'judgeOrder' => $results['judgeOrder'],
+            'categoryName' => 'Production Number',
+        ]);
+    }
+
+    public function casualWearResults()
+    {
+        $results = $this->service->getResultsPerCategory('casual_wear');
+
+        return Inertia::render('Admin/CasualWearResult', [
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'judgeOrder' => $results['judgeOrder'],
+            'categoryName' => 'Casual Wear',
+        ]);
+    }
+
+    public function swimWearResults()
+    {
+        $results = $this->service->getResultsPerCategory('swim_wear');
+
+        return Inertia::render('Admin/SwimWearResult', [
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'judgeOrder' => $results['judgeOrder'],
+            'categoryName' => 'Swim Wear',
+        ]);
+    }
+
+    public function formalWearResults()
+    {
+        $results = $this->service->getResultsPerCategory('formal_wear');
+
+        return Inertia::render('Admin/FormalWearResult', [
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'judgeOrder' => $results['judgeOrder'],
+            'categoryName' => 'Formal Wear',
+        ]);
+    }
+    public function closedDoorInterviewResults()
+    {
+        $results = $this->service->getResultsPerCategory('closed_door_wear');
+
+        return Inertia::render('Admin/ClosedDoorInterviewResult', [
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'judgeOrder' => $results['judgeOrder'],
+            'categoryName' => 'Closed Door Interview',
         ]);
     }
 }

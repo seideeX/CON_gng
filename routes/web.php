@@ -46,12 +46,22 @@ Route::middleware('auth')->group(function () {
         ->name('formal_wear.store');
 });
 
-// Results Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/admin.production_number', [TopFiveSelectionResultController::class, 'productionNumberResults'])
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/admin/production_number', [TopFiveSelectionResultController::class, 'productionNumberResults'])
         ->name('admin.production_number');
-});
 
+    Route::get('/admin/casual_wear', [TopFiveSelectionResultController::class, 'casualWearResults'])
+        ->name('admin.casual_wear');
+
+    Route::get('/admin/swim_wear', [TopFiveSelectionResultController::class, 'swimWearResults'])
+        ->name('admin.swim_wear');
+
+    Route::get('/admin/formal_wear', [TopFiveSelectionResultController::class, 'formalWearResults'])
+        ->name('admin.formal_wear');
+
+    Route::get('/admin/closed_door_interview', [TopFiveSelectionResultController::class, 'closedDoorInterviewResults'])
+        ->name('admin.closed_door_interview');
+});
 
 
 
