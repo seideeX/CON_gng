@@ -20,7 +20,7 @@ class CandidateSeeder extends Seeder
             ['Monique Laurose', 'Evangelista', 'Bachelor of Science in Architecture'],
             ['Ashleigh Zea', 'Bartolome', 'Bachelor of Physical Education'],
             ['Precious Nhickole', 'Zipagan', 'Bachelor of Science in Electrical Engineering'],
-            ['Mary Grace', 'Tabliago', 'Bachelor of Science in Midwifery'],
+            ['Gracielle', 'Perez', 'Bachelor of Science in Midwifery'],
         ];
 
         $maleCandidates = [

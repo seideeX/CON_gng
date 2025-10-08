@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import PrintButton from "./PrintButton";
 
-const ResultTable = ({ title, candidates, judgeOrder, category }) => {
+const TopFiveSelectionTable = ({ title, candidates, categories, category }) => {
     const tableRef = React.useRef();
 
     return (
@@ -22,14 +22,14 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                 <PrintButton
                     title={title}
                     tableRef={tableRef}
-                    category={category}
+                    category={category} // Use passed category for PDF
                 />
             </div>
 
-            {/* Include the heading inside the printable area */}
             <div ref={tableRef}>
+                {/* Heading visible in PDF */}
                 <h2 className="text-center text-2xl font-bold text-black bg-white py-4 print:block hidden">
-                    {title} Results
+                    {category} Results
                 </h2>
 
                 <Table className="bg-neutral-900 text-white border border-gray-700">
@@ -38,13 +38,13 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                         <TableRow>
                             <TableHead>#</TableHead>
                             <TableHead>Candidate</TableHead>
-                            {judgeOrder.map((judge) => (
-                                <TableHead key={judge} className="text-center">
-                                    {judge.replace("_", " ").toUpperCase()}
+                            {categories.map((cat) => (
+                                <TableHead key={cat} className="text-center">
+                                    {cat.replace("_", " ").toUpperCase()}
                                 </TableHead>
                             ))}
                             <TableHead className="text-center">Total</TableHead>
-                            <TableHead className="text-center">Rank</TableHead>
+                            <TableHead className="text-center"> Rank</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -52,8 +52,8 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                             <TableRow
                                 key={c.candidate.id}
                                 className={
-                                    c.rank === 1
-                                        ? "bg-yellow-600 text-black font-bold"
+                                    c.rank <= 5
+                                        ? "bg-yellow-600 text-black font-bold hover:bg-yellow-500 hover:scale-105 transition-all duration-200"
                                         : ""
                                 }
                             >
@@ -78,14 +78,12 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                                         </span>
                                     </div>
                                 </TableCell>
-                                {judgeOrder.map((judge) => (
+                                {categories.map((cat) => (
                                     <TableCell
-                                        key={judge}
+                                        key={cat}
                                         className="text-center"
                                     >
-                                        {Number(c.scores[judge] ?? 0).toFixed(
-                                            2
-                                        )}
+                                        {Number(c.scores[cat] ?? 0).toFixed(2)}
                                     </TableCell>
                                 ))}
                                 <TableCell className="text-center">
@@ -103,4 +101,4 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
     );
 };
 
-export default ResultTable;
+export default TopFiveSelectionTable;

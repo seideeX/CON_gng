@@ -8,16 +8,16 @@ class TopFiveSelectionScoreRepository
 {
     public function updateOrCreateScore(int $judgeId, int $candidateId, string $category, $scoreValue)
     {
-        $record = TopFiveSelectionScore::updateOrCreate(
-            [
-                'judge_id' => $judgeId,
-                'candidate_id' => $candidateId,
-            ],
-            [
-                $category => $scoreValue,
-            ]
-        );
+        // Find existing record or create a new one
+        $record = TopFiveSelectionScore::firstOrNew([
+            'judge_id' => $judgeId,
+            'candidate_id' => $candidateId,
+        ]);
 
+        // Update only the current category score
+        $record->{$category} = $scoreValue;
+
+        // Recalculate the total for all categories
         $record->total_scores =
             ($record->production_number ?? 0) +
             ($record->casual_wear ?? 0) +

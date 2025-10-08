@@ -6,19 +6,31 @@ import html2pdf from "html2pdf.js";
 
 const PrintButton = ({ title, tableRef, category }) => {
     const handlePrintPDF = () => {
-        const filename = `${(category || title).replace(/\s+/g, "_")}.pdf`;
         const element = tableRef.current;
         if (!element) return;
 
-        html2pdf()
-            .set({
-                margin: 2,
-                filename,
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-            })
-            .from(element)
-            .save();
+        const filename = `${(category || title).replace(/\s+/g, "_")}.pdf`;
+
+        const heading = document.createElement("h2");
+        heading.textContent = `${category || title}`;
+        heading.style.textAlign = "center";
+        heading.style.fontSize = "22px";
+        heading.style.fontWeight = "bold";
+        heading.style.marginBottom = "20px";
+        heading.style.color = "black";
+
+        element.insertBefore(heading, element.firstChild);
+
+        // Generate PDF and force download
+        html2pdf(element, {
+            margin: 10,
+            filename,
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        }).then(() => {
+            // Remove temporary heading after saving
+            element.removeChild(heading);
+        });
     };
 
     return (

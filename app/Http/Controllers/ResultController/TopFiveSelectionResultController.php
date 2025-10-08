@@ -64,13 +64,24 @@ class TopFiveSelectionResultController extends Controller
     }
     public function closedDoorInterviewResults()
     {
-        $results = $this->service->getResultsPerCategory('closed_door_wear');
+        $results = $this->service->getResultsPerCategory('closed_door_interview');
 
         return Inertia::render('Admin/ClosedDoorInterviewResult', [
             'maleCandidates' => $results['maleCandidates'],
             'femaleCandidates' => $results['femaleCandidates'],
             'judgeOrder' => $results['judgeOrder'],
             'categoryName' => 'Closed Door Interview',
+        ]);
+    }
+    public function topFiveSelectionResults()
+    {
+        $results = $this->service->getTopFiveSelectionResults();
+
+        return Inertia::render('Admin/TopFiveSelectionResult', [
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'categories' => $results['categories'],
+            'categoryName' => 'Top Five Selection',
         ]);
     }
 }

@@ -20,6 +20,7 @@ import {
     Package,
     Star,
     LogOut,
+    Trophy,
 } from "lucide-react";
 
 export default function SidebarMain({ children }) {
@@ -66,6 +67,11 @@ export default function SidebarMain({ children }) {
                       label: "Closed Door Interview",
                       icon: <User />, // choose an icon, e.g., User
                       route: "admin.closed_door_interview",
+                  },
+                  {
+                      label: "Top Five Selection ",
+                      icon: <Trophy />, // choose an icon, e.g., Star
+                      route: "admin.top_five_selection",
                   },
               ]
             : [

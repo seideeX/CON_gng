@@ -15,7 +15,6 @@ const CasualWear = ({ candidates }) => {
 
     const scoresRef = useRef({});
 
-    // We will track a local version for each tab to trigger re-renders
     const TabContent = ({ candidates }) => {
         const [_, setRerender] = useState(0);
 
@@ -48,7 +47,7 @@ const CasualWear = ({ candidates }) => {
             }
 
             router.post(
-                route("production_number.store"), // <-- using route name
+                route("casual_wear.store"),
                 {
                     judge_id: judgeId,
                     scores: filteredScores,

@@ -61,6 +61,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/admin/closed_door_interview', [TopFiveSelectionResultController::class, 'closedDoorInterviewResults'])
         ->name('admin.closed_door_interview');
+        
+     Route::get('/admin/top_five_selection_result', [TopFiveSelectionResultController::class, 'topFiveSelectionResults'])
+        ->name('admin.top_five_selection');
+
 });
 
 
