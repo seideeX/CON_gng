@@ -53,7 +53,7 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                                 key={c.candidate.id}
                                 className={
                                     c.rank === 1
-                                        ? "bg-yellow-600 text-black font-bold"
+                                        ? "bg-yellow-600 text-black font-bold hover:bg-yellow-500"
                                         : ""
                                 }
                             >

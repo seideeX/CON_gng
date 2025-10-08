@@ -107,7 +107,7 @@ class TopFiveSelectionService
 
             $processed[] = [
                 'candidate' => $candidate,
-                'scores' => $categoryTotals, // totals per category
+                'scores' => $categoryTotals,
                 'total' => round(array_sum($categoryTotals), 2),
                 'rank' => 0,
                 'candidate_number' => $count,

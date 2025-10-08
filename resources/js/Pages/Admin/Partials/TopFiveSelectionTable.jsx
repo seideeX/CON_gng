@@ -22,12 +22,11 @@ const TopFiveSelectionTable = ({ title, candidates, categories, category }) => {
                 <PrintButton
                     title={title}
                     tableRef={tableRef}
-                    category={category} // Use passed category for PDF
+                    category={category}
                 />
             </div>
 
             <div ref={tableRef}>
-                {/* Heading visible in PDF */}
                 <h2 className="text-center text-2xl font-bold text-black bg-white py-4 print:block hidden">
                     {category} Results
                 </h2>
@@ -53,7 +52,7 @@ const TopFiveSelectionTable = ({ title, candidates, categories, category }) => {
                                 key={c.candidate.id}
                                 className={
                                     c.rank <= 5
-                                        ? "bg-yellow-600 text-black font-bold hover:bg-yellow-500 hover:scale-105 transition-all duration-200"
+                                        ? "bg-yellow-600 text-black font-bold hover:bg-yellow-500"
                                         : ""
                                 }
                             >

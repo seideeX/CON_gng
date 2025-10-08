@@ -5,23 +5,23 @@ import { router, usePage } from "@inertiajs/react";
 import PageLayout from "@/Layouts/PageLayout";
 import { Tabs } from "@/Components/ui/tabs";
 import CandidateGrid from "./Partials/CandidateGrid";
-import { HoverBorderGradient } from "@/Components/ui/hover-border-gradient";
+import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
+import { toast } from "sonner";
 
 const FormalWear = ({ candidates }) => {
     const judgeId = usePage().props.auth.user.id;
-
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
 
     const scoresRef = useRef({});
 
-    // We will track a local version for each tab to trigger re-renders
     const TabContent = ({ candidates }) => {
         const [_, setRerender] = useState(0);
+        const [submitted, setSubmitted] = useState(false);
 
         const handleScoreChange = (candidateId, score) => {
             scoresRef.current = { ...scoresRef.current, [candidateId]: score };
-            setRerender((r) => r + 1); // re-render this tab only
+            setRerender((r) => r + 1);
         };
 
         const allScoresFilled = candidates.every(
@@ -48,17 +48,20 @@ const FormalWear = ({ candidates }) => {
             }
 
             router.post(
-                route("formal_wear.store"), // <-- using route name
+                route("formal_wear.store"),
                 {
                     judge_id: judgeId,
                     scores: filteredScores,
                 },
                 {
-                    onSuccess: () => alert("Scores submitted successfully!"),
-                    onError: () =>
-                        alert(
-                            "Failed to submit scores. Check console for details."
-                        ),
+                    onSuccess: () => {
+                        toast.success("Scores submitted successfully!");
+                        router.reload();
+                        setSubmitted(true);
+                    },
+                    onError: () => {
+                        toast.error("Failed to submit scores. Check console.");
+                    },
                 }
             );
         };
@@ -67,25 +70,18 @@ const FormalWear = ({ candidates }) => {
             <div className="flex flex-col items-center gap-6">
                 <CandidateGrid
                     candidates={candidates}
-                    maxScore={20}
+                    maxScore={10}
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
+                    submitted={submitted}
                 />
-                <div className="mb-12">
-                    <HoverBorderGradient
-                        containerClassName="rounded-full"
-                        as="button"
-                        className={`dark:bg-neutral-800 bg-white text-black dark:text-neutral-100 flex items-center space-x-2 px-6 py-2 text-lg font-semibold ${
-                            !allScoresFilled
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
-                        }`}
-                        onClick={handleSubmit}
-                        disabled={!allScoresFilled}
-                    >
-                        <span>Submit Scores</span>
-                    </HoverBorderGradient>
-                </div>
+
+                <ScoreAlertDialog
+                    candidates={candidates}
+                    scoresRef={scoresRef}
+                    allScoresFilled={allScoresFilled}
+                    handleSubmit={handleSubmit}
+                />
             </div>
         );
     };
@@ -94,13 +90,13 @@ const FormalWear = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Male Formal Wear",
+            category: "Formal Wear Number",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
             title: "Female Candidates",
             value: "female",
-            category: "Female Formal Wear",
+            category: "Formal Wear Number",
             content: <TabContent candidates={femaleCandidates} />,
         },
     ];

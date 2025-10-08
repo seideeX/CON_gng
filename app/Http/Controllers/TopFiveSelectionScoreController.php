@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\TopFiveSelectionScoreRepository;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TopFiveSelectionScoreController extends Controller
 {
@@ -28,9 +29,7 @@ class TopFiveSelectionScoreController extends Controller
             $this->scores->updateOrCreateScore($judgeId, $candidateId, $category, $scoreValue);
         }
 
-        return response()->json([
-            'message' => ucfirst(str_replace('_', ' ', $category)) . ' scores saved successfully'
-        ]);
+        return back();
     }
 
     public function production_number_store(Request $request)

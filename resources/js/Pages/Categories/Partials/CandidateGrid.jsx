@@ -8,6 +8,7 @@ const CandidateGrid = ({
     maxScore = 10,
     scoresRef,
     onScoreChange,
+    submitted = false,
 }) => {
     return (
         <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 justify-center">
@@ -67,8 +68,9 @@ const CandidateGrid = ({
                             onChange={handleScoreChange}
                             max={maxScore}
                             disabled={
-                                candidate.existing_score != null &&
-                                candidate.existing_score !== ""
+                                submitted ||
+                                (candidate.existing_score != null &&
+                                    candidate.existing_score !== "")
                             }
                         />
                     </div>
