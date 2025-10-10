@@ -81,6 +81,7 @@ const ProductionNumber = ({ candidates }) => {
                     scoresRef={scoresRef}
                     allScoresFilled={allScoresFilled}
                     handleSubmit={handleSubmit}
+                    submitted={submitted}
                 />
             </div>
         );

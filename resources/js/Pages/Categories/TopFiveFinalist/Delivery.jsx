@@ -5,11 +5,13 @@ import { router, usePage } from "@inertiajs/react";
 import PageLayout from "@/Layouts/PageLayout";
 import { Tabs } from "@/Components/ui/tabs";
 import CandidateGrid from "./Partials/CandidateGrid";
-import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
+import ScoreAlertDialog from "../Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const SwimWear = ({ candidates }) => {
+const Delivery = ({ candidates }) => {
     const judgeId = usePage().props.auth.user.id;
+
+    // Separate male and female candidates
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
 
@@ -20,21 +22,22 @@ const SwimWear = ({ candidates }) => {
         const [submitted, setSubmitted] = useState(false);
 
         const handleScoreChange = (candidateId, score) => {
-            scoresRef.current = { ...scoresRef.current, [candidateId]: score };
+            scoresRef.current[candidateId] = score;
             setRerender((r) => r + 1);
         };
 
         const allScoresFilled = candidates.every(
             (c) =>
-                scoresRef.current[c.id] !== undefined &&
-                scoresRef.current[c.id] !== ""
+                scoresRef.current[c.candidate_id] !== undefined &&
+                scoresRef.current[c.candidate_id] !== ""
         );
 
         const handleSubmit = () => {
             const filteredScores = Object.fromEntries(
-                candidates
-                    .map((c) => [c.id, scoresRef.current[c.id]])
-                    .filter(([_, score]) => score !== undefined && score !== "")
+                candidates.map((c) => [
+                    c.candidate_id,
+                    scoresRef.current[c.candidate_id] ?? c.existing_score ?? 0,
+                ])
             );
 
             if (!judgeId) {
@@ -42,13 +45,13 @@ const SwimWear = ({ candidates }) => {
                 return;
             }
 
-            if (Object.keys(filteredScores).length !== candidates.length) {
+            if (Object.values(filteredScores).some((s) => s === "")) {
                 alert("Please fill in all scores before submitting!");
                 return;
             }
 
             router.post(
-                route("swim_wear.store"),
+                route("delivery.store"),
                 {
                     judge_id: judgeId,
                     scores: filteredScores,
@@ -56,8 +59,8 @@ const SwimWear = ({ candidates }) => {
                 {
                     onSuccess: () => {
                         toast.success("Scores submitted successfully!");
-                        router.reload();
                         setSubmitted(true);
+                        router.reload();
                     },
                     onError: () => {
                         toast.error("Failed to submit scores. Check console.");
@@ -70,10 +73,11 @@ const SwimWear = ({ candidates }) => {
             <div className="flex flex-col items-center gap-6">
                 <CandidateGrid
                     candidates={candidates}
-                    maxScore={10}
+                    maxScore={30}
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    categoryField="delivery"
                 />
 
                 <ScoreAlertDialog
@@ -82,6 +86,7 @@ const SwimWear = ({ candidates }) => {
                     allScoresFilled={allScoresFilled}
                     handleSubmit={handleSubmit}
                     submitted={submitted}
+                    categoryField="delivery"
                 />
             </div>
         );
@@ -91,13 +96,13 @@ const SwimWear = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Male Swim Wear",
+            category: "Male Delivery",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
-            title: "Female Candidates",
+            title: "Female Delivery",
             value: "female",
-            category: "Female Swim Wear",
+            category: "Female Delivery",
             content: <TabContent candidates={femaleCandidates} />,
         },
     ];
@@ -113,4 +118,4 @@ const SwimWear = ({ candidates }) => {
     );
 };
 
-export default SwimWear;
+export default Delivery;

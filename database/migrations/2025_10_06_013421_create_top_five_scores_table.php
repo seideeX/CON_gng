@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('top_five_scores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('candidate_id')->constrained('candidates')->onDelete('cascade');
+            $table->foreignId('top_five_id')
+                ->constrained('top_five_candidates', 'id')
+                ->onDelete('cascade');
             $table->foreignId('judge_id')->constrained('users')->onDelete('cascade');
             $table->decimal('face_and_figure', 5, 2)->nullable();
             $table->decimal('delivery', 5, 2)->nullable();
             $table->decimal('overall_appeal', 5, 2)->nullable();
             $table->decimal('total_score', 5, 2)->nullable();
             $table->timestamps();
-
-            $table->unique(['candidate_id', 'judge_id']);
         });
     }
 

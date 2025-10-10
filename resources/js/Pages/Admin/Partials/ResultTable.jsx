@@ -57,7 +57,9 @@ const ResultTable = ({ title, candidates, judgeOrder, category }) => {
                                         : ""
                                 }
                             >
-                                <TableCell>{c.candidate_number}</TableCell>
+                                <TableCell>
+                                    {c.candidate.candidate_number}
+                                </TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-2">
                                         <img

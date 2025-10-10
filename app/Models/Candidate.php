@@ -12,6 +12,7 @@ class Candidate extends Model
 
     protected $fillable = [
         'profile_img',
+        'candidate_number',
         'first_name',
         'last_name',
         'gender',

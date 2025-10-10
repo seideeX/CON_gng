@@ -11,7 +11,7 @@ class TopFiveScore extends Model
     use HasFactory;
 
     protected $fillable = [
-        'candidate_id',
+        'top_five_id',
         'judge_id',
         'face_and_figure',
         'delivery',
@@ -19,9 +19,9 @@ class TopFiveScore extends Model
         'total_score',
     ];
 
-    public function candidate()
+    public function topFive()
     {
-        return $this->belongsTo(Candidate::class);
+        return $this->belongsTo(TopFiveCandidates::class, 'top_five_id');
     }
 
     public function judge()

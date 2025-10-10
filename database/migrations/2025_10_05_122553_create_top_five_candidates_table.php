@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidates', function (Blueprint $table) {
+        Schema::create('top_five_candidates', function (Blueprint $table) {
             $table->id();
-            $table->integer('candidate_number');
-            $table->string('profile_img');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('course');
-            $table->enum('gender', ['male', 'female']);
+            $table->foreignId('candidate_id')->constrained('candidates')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidates');
+        Schema::dropIfExists('top_five_candidates');
     }
 };

@@ -20,11 +20,8 @@ class CandidateController extends Controller
     {
         $candidates = $this->candidates->all();
 
-        $user = Auth::user(); // Get the logged-in user
+        $user = Auth::user();
 
-        if (!$user) {
-            abort(403, 'Unauthorized. Please log in as a judge.');
-        }
 
         $judgeId = $user->id;
 

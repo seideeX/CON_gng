@@ -81,6 +81,7 @@ const FormalWear = ({ candidates }) => {
                     scoresRef={scoresRef}
                     allScoresFilled={allScoresFilled}
                     handleSubmit={handleSubmit}
+                    submitted={submitted}
                 />
             </div>
         );
@@ -90,13 +91,13 @@ const FormalWear = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Formal Wear Number",
+            category: "Male Formal Wear",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
             title: "Female Candidates",
             value: "female",
-            category: "Formal Wear Number",
+            category: "Female Formal Wear",
             content: <TabContent candidates={femaleCandidates} />,
         },
     ];

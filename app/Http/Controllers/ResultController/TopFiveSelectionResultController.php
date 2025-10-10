@@ -4,7 +4,9 @@ namespace App\Http\Controllers\ResultController;
 
 use App\Http\Controllers\Controller;
 use App\Services\TopFiveSelectionService;
+use App\Models\TopFiveCandidates;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class TopFiveSelectionResultController extends Controller
 {
@@ -83,5 +85,23 @@ class TopFiveSelectionResultController extends Controller
             'categories' => $results['categories'],
             'categoryName' => 'Top Five Selection',
         ]);
+    }
+
+    public function setTopFive(Request $request)
+    {
+        $request->validate([
+            'candidate_ids' => 'required|array|min:1',
+            'candidate_ids.*' => 'exists:candidates,id',
+        ]);
+
+        TopFiveCandidates::query()->delete();
+
+        foreach ($request->candidate_ids as $candidateId) {
+            TopFiveCandidates::create([
+                'candidate_id' => $candidateId,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Top 5 Male & Female saved successfully!');
     }
 }

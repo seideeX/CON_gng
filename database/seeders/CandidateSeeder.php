@@ -35,28 +35,29 @@ class CandidateSeeder extends Seeder
             ['Jairus', 'Alvarez', 'Bachelor of Physical Education'],
             ['Jenkins', 'Delos Reyes', 'Bachelor of Science in Electrical Engineering'],
             ['John Carlo', 'Mendoza', 'Bachelor of Technology and Livelihood Education'],
-        
         ];
 
-        // Female candidates with numbered images
+        // Female candidates with numbered images and candidate_number
         foreach ($femaleCandidates as $index => $candidate) {
             Candidate::create([
-                'first_name'    => $candidate[0],
-                'last_name'     => $candidate[1],
-                'gender'        => 'female',
-                'course'        => $candidate[2],
-                'profile_img'   => "candidates/female/" . ($index + 1) . ".jpg",
+                'first_name'      => $candidate[0],
+                'last_name'       => $candidate[1],
+                'gender'          => 'female',
+                'course'          => $candidate[2],
+                'profile_img'     => "candidates/female/" . ($index + 1) . ".jpg",
+                'candidate_number' => $index + 1,
             ]);
         }
 
-        // Male candidates with numbered images
+        // Male candidates with numbered images and candidate_number
         foreach ($maleCandidates as $index => $candidate) {
             Candidate::create([
-                'first_name'    => $candidate[0],
-                'last_name'     => $candidate[1],
-                'gender'        => 'male',
-                'course'        => $candidate[2],
-                'profile_img'   => "candidates/male/" . ($index + 1) . ".jpg",
+                'first_name'      => $candidate[0],
+                'last_name'       => $candidate[1],
+                'gender'          => 'male',
+                'course'          => $candidate[2],
+                'profile_img'     => "candidates/male/" . ($index + 1) . ".jpg",
+                'candidate_number' => $index + 1,
             ]);
         }
     }

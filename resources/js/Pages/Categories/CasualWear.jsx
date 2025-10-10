@@ -81,6 +81,7 @@ const CasualWear = ({ candidates }) => {
                     scoresRef={scoresRef}
                     allScoresFilled={allScoresFilled}
                     handleSubmit={handleSubmit}
+                    submitted={submitted}
                 />
             </div>
         );
@@ -90,13 +91,13 @@ const CasualWear = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Casual Wear Number",
+            category: "Male Casual Wear",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
             title: "Female Candidates",
             value: "female",
-            category: "Casual Wear Number",
+            category: "Female Casual Wear",
             content: <TabContent candidates={femaleCandidates} />,
         },
     ];

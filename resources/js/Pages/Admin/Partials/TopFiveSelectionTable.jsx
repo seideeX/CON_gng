@@ -56,7 +56,9 @@ const TopFiveSelectionTable = ({ title, candidates, categories, category }) => {
                                         : ""
                                 }
                             >
-                                <TableCell>{c.candidate_number}</TableCell>
+                                <TableCell>
+                                    {c.candidate.candidate_number}
+                                </TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-2">
                                         <img

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { HoverBorderGradient } from "@/Components/ui/hover-border-gradient";
 import {
     AlertDialog,
@@ -19,8 +19,15 @@ const ScoreAlertDialog = ({
     scoresRef,
     allScoresFilled,
     handleSubmit,
-    submitted = false,
+    categoryField,
 }) => {
+    // Local state to force re-render of scores inside the dialog
+    const [scores, setScores] = useState({});
+
+    useEffect(() => {
+        setScores({ ...scoresRef.current });
+    }, [scoresRef.current]); // update whenever scoresRef changes
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -28,17 +35,15 @@ const ScoreAlertDialog = ({
                     as="button"
                     containerClassName="rounded-full"
                     className={`dark:bg-neutral-800 bg-white text-black dark:text-neutral-100 flex items-center space-x-2 px-6 py-2 text-lg font-semibold ${
-                        !allScoresFilled || submitted
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
+                        !allScoresFilled ? "opacity-50 cursor-not-allowed" : ""
                     }`}
-                    disabled={!allScoresFilled || submitted}
+                    disabled={!allScoresFilled}
                 >
                     Submit Scores
                 </HoverBorderGradient>
             </AlertDialogTrigger>
 
-            <AlertDialogContent className="sm:max-w-lg max-h-[75vh] bg-neutral-900 text-white rounded-lg shadow-lg p-6">
+            <AlertDialogContent className="sm:max-w-lg max-h-[75vh] bg-neutral-900 text-white rounded-lg shadow-lg p-6 overflow-auto">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Verify Scores</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -62,31 +67,44 @@ const ScoreAlertDialog = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {candidates.map((c, idx) => (
-                                <tr key={c.id} className="bg-neutral-800">
-                                    <td className="p-2 border-b border-gray-600">
-                                        {c.candidate_number}
-                                    </td>
-                                    <td className="p-2 border-b border-gray-600">
-                                        <div className="flex items-center gap-2">
-                                            <img
-                                                src={
-                                                    c.profile_img ||
-                                                    "/default-avatar.png"
-                                                }
-                                                alt={`${c.first_name} ${c.last_name}`}
-                                                className="w-6 h-6 rounded-full object-cover"
-                                            />
-                                            <span>
-                                                {c.first_name} {c.last_name}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="p-2 border-b border-gray-600 text-center">
-                                        {scoresRef.current[c.id]}
-                                    </td>
-                                </tr>
-                            ))}
+                            {candidates.map((c) => {
+                                const candidateKey = c.candidate_id || c.id;
+
+                                // Use scoresRef first, fallback to existing score
+                                const score =
+                                    scores[candidateKey] ??
+                                    c[categoryField] ??
+                                    0;
+
+                                return (
+                                    <tr
+                                        key={candidateKey}
+                                        className="bg-neutral-800"
+                                    >
+                                        <td className="p-2 border-b border-gray-600">
+                                            {c.candidate_number}
+                                        </td>
+                                        <td className="p-2 border-b border-gray-600">
+                                            <div className="flex items-center gap-2">
+                                                <img
+                                                    src={
+                                                        c.profile_img ||
+                                                        "/default-avatar.png"
+                                                    }
+                                                    alt={`${c.first_name} ${c.last_name}`}
+                                                    className="w-6 h-6 rounded-full object-cover"
+                                                />
+                                                <span>
+                                                    {c.first_name} {c.last_name}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="p-2 border-b border-gray-600 text-center">
+                                            {score}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

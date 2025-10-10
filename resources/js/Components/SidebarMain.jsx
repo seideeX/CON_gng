@@ -93,24 +93,28 @@ export default function SidebarMain({ children }) {
                   },
               ];
 
-    // Top 5 links — dynamic based on user role
     const top5Links =
         user?.role === "admin"
             ? [
                   {
-                      label: "Manage Judges",
+                      label: "Beauty of the Face and Figure",
                       icon: <User />,
-                      route: "admin.judges",
+                      route: "admin.beauty_face_figure",
                   },
                   {
-                      label: "Manage Candidates",
+                      label: "Delivery",
                       icon: <Package />,
-                      route: "admin.candidates",
+                      route: "admin.delivery",
                   },
                   {
-                      label: "Settings / Reports",
+                      label: "Over-all Appeal / X-factor",
                       icon: <Star />,
-                      route: "admin.settings",
+                      route: "admin.overall_appeal",
+                  },
+                  {
+                      label: "Top Five Finalist",
+                      icon: <Trophy />,
+                      route: "admin.top_five_finalist",
                   },
               ]
             : [
@@ -193,10 +197,17 @@ export default function SidebarMain({ children }) {
                                         <SidebarLink
                                             key={idx}
                                             link={{
-                                                ...link,
+                                                label: link.label,
                                                 icon: iconElement,
+                                                href: "#", // required prop
                                                 className:
                                                     "text-neutral-700 dark:text-neutral-200",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    router.get(
+                                                        route(link.route)
+                                                    );
+                                                },
                                             }}
                                         />
                                     );
