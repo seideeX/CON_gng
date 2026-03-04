@@ -16,49 +16,35 @@ class TopFiveCandidateResultController extends Controller
     }
 
     /**
-     * Display results for Beauty of the Face and Figure category
+     * Display results for Preliminary Round category
      */
-    public function beautyFaceResults()
+    public function preliminaryRoundResults()
     {
-        $results = $this->service->getResultsPerCategory('face_and_figure');
+        $results = $this->service->getResultsPerCategory('preliminary_round');
 
-        return Inertia::render('Admin/TopFiveCategories/BeautyFaceFigureResult', [
+        return Inertia::render('Admin/TopFiveCategories/PreliminaryRoundResult', [
             'maleCandidates'   => $results['maleCandidates'],
             'femaleCandidates' => $results['femaleCandidates'],
             'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Beauty of the Face and Figure',
+            'categoryName'     => 'Preliminary Round',
         ]);
     }
 
     /**
-     * Display results for Delivery category
+     * Display results for Final Round category
      */
-    public function deliveryResults()
+    public function finalRoundResults()
     {
-        $results = $this->service->getResultsPerCategory('delivery');
+        $results = $this->service->getResultsPerCategory('final_round');
 
-        return Inertia::render('Admin/TopFiveCategories/DeliveryResult', [
+        return Inertia::render('Admin/TopFiveCategories/FinalRoundResult', [
             'maleCandidates'   => $results['maleCandidates'],
             'femaleCandidates' => $results['femaleCandidates'],
             'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Delivery',
+            'categoryName'     => 'Final Round',
         ]);
     }
 
-    /**
-     * Display results for Over-all Appeal / X-factor category
-     */
-    public function overallAppealResults()
-    {
-        $results = $this->service->getResultsPerCategory('overall_appeal');
-
-        return Inertia::render('Admin/TopFiveCategories/OverallAppealResult', [
-            'maleCandidates'   => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder'       => $results['judgeOrder'],
-            'categoryName'     => 'Over-all Appeal / X-factor',
-        ]);
-    }
     public function totalResults()
     {
         $results = $this->service->getTotalResults();

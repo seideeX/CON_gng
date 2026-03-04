@@ -4,38 +4,54 @@ import React, { useRef, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import PageLayout from "@/Layouts/PageLayout";
 import { Tabs } from "@/Components/ui/tabs";
-import CandidateGrid from "./Partials/CandidateGrid";
+import SubCriteriaGrid from "./Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const FormalWear = ({ candidates }) => {
+const Swimsuit = ({ candidates }) => {
     const judgeId = usePage().props.auth.user.id;
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
 
     const scoresRef = useRef({});
 
+    const subCriteria = [
+        { key: "body_proportion", label: "Body Proportion & Fitness", max: 30 },
+        { key: "confidence_stage_presence", label: "Confidence & Stage Presence", max: 25 },
+        { key: "walk_bearing", label: "Walk & Bearing", max: 20 },
+        { key: "poise_composure", label: "Poise & Composure", max: 15 },
+        { key: "overall_appeal", label: "Overall Appeal", max: 10 },
+    ];
+
     const TabContent = ({ candidates }) => {
         const [_, setRerender] = useState(0);
         const [submitted, setSubmitted] = useState(false);
 
-        const handleScoreChange = (candidateId, score) => {
-            scoresRef.current = { ...scoresRef.current, [candidateId]: score };
+        const handleScoreChange = (candidateId, subKey, score) => {
+            if (!scoresRef.current[candidateId]) {
+                scoresRef.current[candidateId] = {};
+            }
+            scoresRef.current[candidateId][subKey] = score;
             setRerender((r) => r + 1);
         };
 
-        const allScoresFilled = candidates.every(
-            (c) =>
-                scoresRef.current[c.id] !== undefined &&
-                scoresRef.current[c.id] !== ""
-        );
+        const allScoresFilled = candidates.every((c) => {
+            const candidateScores = scoresRef.current[c.id];
+            if (!candidateScores) return false;
+            return subCriteria.every(
+                (sub) =>
+                    candidateScores[sub.key] !== undefined &&
+                    candidateScores[sub.key] !== ""
+            );
+        });
 
         const handleSubmit = () => {
-            const filteredScores = Object.fromEntries(
-                candidates
-                    .map((c) => [c.id, scoresRef.current[c.id]])
-                    .filter(([_, score]) => score !== undefined && score !== "")
-            );
+            const filteredScores = {};
+            candidates.forEach((c) => {
+                if (scoresRef.current[c.id]) {
+                    filteredScores[c.id] = scoresRef.current[c.id];
+                }
+            });
 
             if (!judgeId) {
                 alert("Judge ID is missing!");
@@ -48,7 +64,7 @@ const FormalWear = ({ candidates }) => {
             }
 
             router.post(
-                route("formal_wear.store"),
+                route("swimsuit.store"),
                 {
                     judge_id: judgeId,
                     scores: filteredScores,
@@ -68,9 +84,9 @@ const FormalWear = ({ candidates }) => {
 
         return (
             <div className="flex flex-col items-center gap-6">
-                <CandidateGrid
+                <SubCriteriaGrid
                     candidates={candidates}
-                    maxScore={10}
+                    subCriteria={subCriteria}
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
@@ -91,13 +107,13 @@ const FormalWear = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Male Formal Wear",
+            category: "Male Swimsuit",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
             title: "Female Candidates",
             value: "female",
-            category: "Female Formal Wear",
+            category: "Female Swimsuit",
             content: <TabContent candidates={femaleCandidates} />,
         },
     ];
@@ -113,4 +129,4 @@ const FormalWear = ({ candidates }) => {
     );
 };
 
-export default FormalWear;
+export default Swimsuit;

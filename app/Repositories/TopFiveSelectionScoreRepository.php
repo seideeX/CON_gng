@@ -6,7 +6,7 @@ use App\Models\TopFiveSelectionScore;
 
 class TopFiveSelectionScoreRepository
 {
-    public function updateOrCreateScore(int $judgeId, int $candidateId, string $category, $scoreValue)
+    public function updateOrCreateScore(int $judgeId, int $candidateId, string $category, array $subScores)
     {
         // Find existing record or create a new one
         $record = TopFiveSelectionScore::firstOrNew([
@@ -14,16 +14,19 @@ class TopFiveSelectionScoreRepository
             'candidate_id' => $candidateId,
         ]);
 
-        // Update only the current category score
-        $record->{$category} = $scoreValue;
+        // Store sub-criteria scores as JSON for the category
+        $record->{$category} = json_encode($subScores);
 
-        // Recalculate the total for all categories
+        // Calculate category total from sub-criteria
+        $categoryTotal = array_sum($subScores);
+        $record->{$category . '_total'} = $categoryTotal;
+
+        // Recalculate the grand total for all categories
         $record->total_scores =
-            ($record->production_number ?? 0) +
-            ($record->casual_wear ?? 0) +
-            ($record->swim_wear ?? 0) +
-            ($record->formal_wear ?? 0) +
-            ($record->closed_door_interview ?? 0);
+            ($record->evening_gown_total ?? 0) +
+            ($record->production_number_total ?? 0) +
+            ($record->casual_wear_total ?? 0) +
+            ($record->swimsuit_total ?? 0);
 
         $record->save();
 

@@ -44,9 +44,14 @@ export default function SidebarMain({ children }) {
         user?.role === "admin"
             ? [
                   {
+                      label: "Evening Gown",
+                      icon: <Award />,
+                      route: "admin.evening_gown",
+                  },
+                  {
                       label: "Production Number",
                       icon: <ListChecks />,
-                      route: "admin.production_number", // ✅ Use route name
+                      route: "admin.production_number",
                   },
                   {
                       label: "Casual Wear",
@@ -54,27 +59,22 @@ export default function SidebarMain({ children }) {
                       route: "admin.casual_wear",
                   },
                   {
-                      label: "Swim Wear",
+                      label: "Swimsuit",
                       icon: <Droplet />,
-                      route: "admin.swim_wear",
+                      route: "admin.swimsuit",
                   },
                   {
-                      label: "Formal Wear",
-                      icon: <Award />,
-                      route: "admin.formal_wear",
-                  },
-                  {
-                      label: "Closed Door Interview",
-                      icon: <User />, // choose an icon, e.g., User
-                      route: "admin.closed_door_interview",
-                  },
-                  {
-                      label: "Top Five Selection ",
-                      icon: <Trophy />, // choose an icon, e.g., Star
+                      label: "Top Five Selection",
+                      icon: <Trophy />,
                       route: "admin.top_five_selection",
                   },
               ]
             : [
+                  {
+                      label: "Evening Gown",
+                      icon: <Award />,
+                      route: "evening_gown",
+                  },
                   {
                       label: "Production Number",
                       icon: <ListChecks />,
@@ -85,11 +85,10 @@ export default function SidebarMain({ children }) {
                       icon: <Shirt />,
                       route: "casual_wear",
                   },
-                  { label: "Swim Wear", icon: <Droplet />, route: "swim_wear" },
                   {
-                      label: "Formal Wear",
-                      icon: <Award />,
-                      route: "formal_wear",
+                      label: "Swimsuit",
+                      icon: <Droplet />,
+                      route: "swimsuit",
                   },
               ];
 
@@ -97,19 +96,14 @@ export default function SidebarMain({ children }) {
         user?.role === "admin"
             ? [
                   {
-                      label: "Beauty of the Face and Figure",
+                      label: "Preliminary Round",
                       icon: <User />,
-                      route: "admin.beauty_face_figure",
+                      route: "admin.preliminary_round",
                   },
                   {
-                      label: "Delivery",
+                      label: "Final Round",
                       icon: <Package />,
-                      route: "admin.delivery",
-                  },
-                  {
-                      label: "Over-all Appeal / X-factor",
-                      icon: <Star />,
-                      route: "admin.overall_appeal",
+                      route: "admin.final_round",
                   },
                   {
                       label: "Top Five Finalist",
@@ -119,15 +113,14 @@ export default function SidebarMain({ children }) {
               ]
             : [
                   {
-                      label: "Beauty of the Face and Figure",
+                      label: "Preliminary Round",
                       icon: <User />,
-                      route: "beauty_face_figure",
+                      route: "preliminary_round",
                   },
-                  { label: "Delivery", icon: <Package />, route: "delivery" },
                   {
-                      label: "Over-all Appeal / X-factor",
-                      icon: <Star />,
-                      route: "overall_appeal",
+                      label: "Final Round",
+                      icon: <Package />,
+                      route: "final_round",
                   },
               ];
 

@@ -37,11 +37,10 @@ class TopFiveCandidateController extends Controller
                     'last_name' => $item->candidate->last_name ?? null,
                     'course' => $item->candidate->course ?? null,
                     'gender' => $item->candidate->gender ?? null,
-                    $categoryField => $score->{$categoryField} ?? null,
+                    $categoryField => $score->{$categoryField . '_total'} ?? null,
                     'has_existing_score' => [
-                        'face_and_figure' => $score->face_and_figure ?? null,
-                        'delivery' => $score->delivery ?? null,
-                        'overall_appeal' => $score->overall_appeal ?? null,
+                        'preliminary_round' => $score->preliminary_round_total ?? null,
+                        'final_round' => $score->final_round_total ?? null,
                     ],
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
@@ -55,18 +54,13 @@ class TopFiveCandidateController extends Controller
     }
 
 
-    public function faceAndFigure()
+    public function preliminaryRound()
     {
-        return $this->renderCategory('Categories/TopFiveFinalist/BeautyFaceFigure', 'face_and_figure');
+        return $this->renderCategory('Categories/TopFiveFinalist/PreliminaryRound', 'preliminary_round');
     }
 
-    public function delivery()
+    public function finalRound()
     {
-        return $this->renderCategory('Categories/TopFiveFinalist/Delivery', 'delivery');
-    }
-
-    public function overallAppeal()
-    {
-        return $this->renderCategory('Categories/TopFiveFinalist/OverallAppeal', 'overall_appeal');
+        return $this->renderCategory('Categories/TopFiveFinalist/FinalRound', 'final_round');
     }
 }

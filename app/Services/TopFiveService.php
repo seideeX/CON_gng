@@ -9,9 +9,22 @@ use App\Models\TopFiveCandidates;
 class TopFiveService
 {
     protected $categories = [
-        'face_and_figure',
-        'delivery',
-        'overall_appeal',
+        'preliminary_round',
+        'final_round',
+    ];
+
+    protected $subCriteria = [
+        'preliminary_round' => [
+            'beauty' => 30,
+            'poise_composure' => 20,
+            'wit' => 50,
+        ],
+        'final_round' => [
+            'intelligence_depth' => 40,
+            'communication_skills' => 25,
+            'stage_presence_confidence' => 20,
+            'overall_impact' => 15,
+        ],
     ];
 
     /**
@@ -58,11 +71,12 @@ class TopFiveService
             // Initialize scores for each judge
             $candidateScores = array_fill_keys($judgeOrder, 0);
 
-            // Fill in scores from DB using top_five_id
+            // Fill in scores from DB using top_five_id (use the _total field)
             $candidateScoresFromDB = $scores->where('top_five_id', $topFiveId);
             foreach ($candidateScoresFromDB as $score) {
                 if (in_array($score->judge->name, $judgeOrder)) {
-                    $candidateScores[$score->judge->name] = $score->{$category} ?? 0;
+                    // Use the category_total field which contains the sum of sub-criteria
+                    $candidateScores[$score->judge->name] = $score->{$category . '_total'} ?? 0;
                 }
             }
 
@@ -93,7 +107,8 @@ class TopFiveService
             $candidateScores = $scores->where('top_five_id', $topFiveId);
             foreach ($candidateScores as $score) {
                 foreach ($this->categories as $cat) {
-                    $categoryTotals[$cat] += $score->{$cat} ?? 0;
+                    // Use the category_total field which contains the sum of sub-criteria
+                    $categoryTotals[$cat] += $score->{$cat . '_total'} ?? 0;
                 }
             }
 

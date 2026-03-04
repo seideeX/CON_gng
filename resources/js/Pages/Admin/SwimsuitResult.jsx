@@ -4,8 +4,8 @@ import React from "react";
 import PageLayout from "@/Layouts/PageLayout";
 import ResultTable from "./Partials/ResultTable";
 
-const CasualWearResult = ({
-    categoryName = "Swim Wear",
+const SwimsuitResult = ({
+    categoryName = "Swimsuit",
     maleCandidates = [],
     femaleCandidates = [],
     judgeOrder = [],
@@ -32,4 +32,4 @@ const CasualWearResult = ({
     );
 };
 
-export default CasualWearResult;
+export default SwimsuitResult;

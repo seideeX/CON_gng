@@ -23,12 +23,13 @@ class TopFiveScoreController extends Controller
         $request->validate([
             'judge_id' => 'required|exists:users,id',
             'scores' => 'required|array',
+            'scores.*' => 'required|array', // Each candidate should have sub-criteria scores
         ]);
 
         $judgeId = $request->input('judge_id');
         $scores = $request->input('scores');
 
-        foreach ($scores as $candidateId => $scoreValue) {
+        foreach ($scores as $candidateId => $subScores) {
             $topFive = TopFiveCandidates::where('candidate_id', $candidateId)->first();
 
             if (!$topFive) {
@@ -37,33 +38,25 @@ class TopFiveScoreController extends Controller
 
             $topFiveId = $topFive->id;
 
-            $this->scores->updateOrCreateScore($judgeId, $topFiveId, $category, $scoreValue);
+            $this->scores->updateOrCreateScore($judgeId, $topFiveId, $category, $subScores);
         }
 
         return back();
     }
 
     /**
-     * Store Face & Figure scores
+     * Store Preliminary Round scores
      */
-    public function faceAndFigureStore(Request $request)
+    public function preliminaryRoundStore(Request $request)
     {
-        return $this->storeScores($request, 'face_and_figure');
+        return $this->storeScores($request, 'preliminary_round');
     }
 
     /**
-     * Store Delivery scores
+     * Store Final Round scores
      */
-    public function deliveryStore(Request $request)
+    public function finalRoundStore(Request $request)
     {
-        return $this->storeScores($request, 'delivery');
-    }
-
-    /**
-     * Store Overall Appeal scores
-     */
-    public function overallAppealStore(Request $request)
-    {
-        return $this->storeScores($request, 'overall_appeal');
+        return $this->storeScores($request, 'final_round');
     }
 }

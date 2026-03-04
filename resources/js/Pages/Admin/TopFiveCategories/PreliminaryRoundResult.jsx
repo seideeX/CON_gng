@@ -2,10 +2,10 @@
 
 import React from "react";
 import PageLayout from "@/Layouts/PageLayout";
-import ResultTable from "./Partials/ResultTable";
+import ResultTable from "@/Pages/Admin/Partials/ResultTable";
 
-const ClosedDoorInterviewResult = ({
-    categoryName = "Closed Door Interview",
+const PreliminaryRoundResult = ({
+    categoryName = "Preliminary Round",
     maleCandidates = [],
     femaleCandidates = [],
     judgeOrder = [],
@@ -32,4 +32,4 @@ const ClosedDoorInterviewResult = ({
     );
 };
 
-export default ClosedDoorInterviewResult;
+export default PreliminaryRoundResult;

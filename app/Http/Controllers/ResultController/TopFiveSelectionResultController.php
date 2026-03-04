@@ -17,6 +17,18 @@ class TopFiveSelectionResultController extends Controller
         $this->service = $service;
     }
 
+    public function eveningGownResults()
+    {
+        $results = $this->service->getResultsPerCategory('evening_gown');
+
+        return Inertia::render('Admin/EveningGownResult', [
+            'maleCandidates' => $results['maleCandidates'],
+            'femaleCandidates' => $results['femaleCandidates'],
+            'judgeOrder' => $results['judgeOrder'],
+            'categoryName' => 'Evening Gown',
+        ]);
+    }
+
     public function productionNumberResults()
     {
         $results = $this->service->getResultsPerCategory('production_number');
@@ -41,38 +53,15 @@ class TopFiveSelectionResultController extends Controller
         ]);
     }
 
-    public function swimWearResults()
+    public function swimsuitResults()
     {
-        $results = $this->service->getResultsPerCategory('swim_wear');
+        $results = $this->service->getResultsPerCategory('swimsuit');
 
-        return Inertia::render('Admin/SwimWearResult', [
+        return Inertia::render('Admin/SwimsuitResult', [
             'maleCandidates' => $results['maleCandidates'],
             'femaleCandidates' => $results['femaleCandidates'],
             'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Swim Wear',
-        ]);
-    }
-
-    public function formalWearResults()
-    {
-        $results = $this->service->getResultsPerCategory('formal_wear');
-
-        return Inertia::render('Admin/FormalWearResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Formal Wear',
-        ]);
-    }
-    public function closedDoorInterviewResults()
-    {
-        $results = $this->service->getResultsPerCategory('closed_door_interview');
-
-        return Inertia::render('Admin/ClosedDoorInterviewResult', [
-            'maleCandidates' => $results['maleCandidates'],
-            'femaleCandidates' => $results['femaleCandidates'],
-            'judgeOrder' => $results['judgeOrder'],
-            'categoryName' => 'Closed Door Interview',
+            'categoryName' => 'Swimsuit',
         ]);
     }
     public function topFiveSelectionResults()

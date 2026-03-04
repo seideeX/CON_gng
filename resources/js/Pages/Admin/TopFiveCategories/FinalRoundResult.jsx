@@ -4,8 +4,8 @@ import React from "react";
 import PageLayout from "@/Layouts/PageLayout";
 import ResultTable from "@/Pages/Admin/Partials/ResultTable";
 
-const BeautyFaceFigureResult = ({
-    categoryName = "Beauty of the Face and Figure",
+const FinalRoundResult = ({
+    categoryName = "Final Round",
     maleCandidates = [],
     femaleCandidates = [],
     judgeOrder = [],
@@ -32,4 +32,4 @@ const BeautyFaceFigureResult = ({
     );
 };
 
-export default BeautyFaceFigureResult;
+export default FinalRoundResult;

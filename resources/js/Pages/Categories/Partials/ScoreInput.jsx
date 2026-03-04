@@ -65,6 +65,7 @@ const ScoreInput = ({ value, onChange, max, disabled = false }) => {
                 )}
                 <input
                     type="number"
+                    step="0.1"
                     min={0}
                     max={max}
                     value={value ?? ""}
@@ -72,7 +73,7 @@ const ScoreInput = ({ value, onChange, max, disabled = false }) => {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     placeholder={`0.0 / ${max}`}
-                    disabled={disabled} // <-- added
+                    disabled={disabled}
                     className="relative z-10 w-full text-center px-4 py-2 rounded-full bg-neutral-900 text-white focus:outline-none focus:bg-neutral-800 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
             </div>

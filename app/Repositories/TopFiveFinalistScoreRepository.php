@@ -6,7 +6,7 @@ use App\Models\TopFiveScore;
 
 class TopFiveFinalistScoreRepository
 {
-    public function updateOrCreateScore(int $judgeId, int $topFiveId, string $category, $scoreValue)
+    public function updateOrCreateScore(int $judgeId, int $topFiveId, string $category, array $subScores)
     {
         // Use top_five_id instead of candidate_id
         $record = TopFiveScore::firstOrNew([
@@ -14,14 +14,17 @@ class TopFiveFinalistScoreRepository
             'top_five_id' => $topFiveId,
         ]);
 
-        // Update only the current category score
-        $record->{$category} = $scoreValue;
+        // Store sub-criteria scores as JSON for the category
+        $record->{$category} = json_encode($subScores);
+
+        // Calculate category total from sub-criteria
+        $categoryTotal = array_sum($subScores);
+        $record->{$category . '_total'} = $categoryTotal;
 
         // Recalculate total score
         $record->total_score =
-            ($record->face_and_figure ?? 0) +
-            ($record->delivery ?? 0) +
-            ($record->overall_appeal ?? 0);
+            ($record->preliminary_round_total ?? 0) +
+            ($record->final_round_total ?? 0);
 
         $record->save();
 

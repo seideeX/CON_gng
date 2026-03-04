@@ -20,16 +20,22 @@ class TopFiveSelectionScoreController extends Controller
         $request->validate([
             'judge_id' => 'required|exists:users,id',
             'scores' => 'required|array',
+            'scores.*' => 'required|array', // Each candidate should have sub-criteria scores
         ]);
 
         $judgeId = $request->input('judge_id');
         $scores = $request->input('scores');
 
-        foreach ($scores as $candidateId => $scoreValue) {
-            $this->scores->updateOrCreateScore($judgeId, $candidateId, $category, $scoreValue);
+        foreach ($scores as $candidateId => $subScores) {
+            $this->scores->updateOrCreateScore($judgeId, $candidateId, $category, $subScores);
         }
 
         return back();
+    }
+
+    public function evening_gown_store(Request $request)
+    {
+        return $this->storeScores($request, 'evening_gown');
     }
 
     public function production_number_store(Request $request)
@@ -42,13 +48,8 @@ class TopFiveSelectionScoreController extends Controller
         return $this->storeScores($request, 'casual_wear');
     }
 
-    public function swim_wear_store(Request $request)
+    public function swimsuit_store(Request $request)
     {
-        return $this->storeScores($request, 'swim_wear');
-    }
-
-    public function formal_wear_store(Request $request)
-    {
-        return $this->storeScores($request, 'formal_wear');
+        return $this->storeScores($request, 'swimsuit');
     }
 }

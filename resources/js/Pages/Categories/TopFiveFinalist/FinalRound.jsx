@@ -4,54 +4,69 @@ import React, { useRef, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import PageLayout from "@/Layouts/PageLayout";
 import { Tabs } from "@/Components/ui/tabs";
-import CandidateGrid from "./Partials/CandidateGrid";
+import SubCriteriaGrid from "../Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "../Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const Delivery = ({ candidates }) => {
+const FinalRound = ({ candidates }) => {
     const judgeId = usePage().props.auth.user.id;
 
-    // Separate male and female candidates
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
 
     const scoresRef = useRef({});
 
+    const subCriteria = [
+        { key: "intelligence_depth", label: "Intelligence & Depth of Answer", max: 40 },
+        { key: "communication_skills", label: "Communication Skills", max: 25 },
+        { key: "stage_presence_confidence", label: "Stage Presence & Confidence", max: 20 },
+        { key: "overall_impact", label: "Overall Impact", max: 15 },
+    ];
+
     const TabContent = ({ candidates }) => {
         const [_, setRerender] = useState(0);
         const [submitted, setSubmitted] = useState(false);
 
-        const handleScoreChange = (candidateId, score) => {
-            scoresRef.current[candidateId] = score;
+        const handleScoreChange = (candidateId, subKey, score) => {
+            if (!scoresRef.current[candidateId]) {
+                scoresRef.current[candidateId] = {};
+            }
+            scoresRef.current[candidateId][subKey] = score;
             setRerender((r) => r + 1);
         };
 
-        const allScoresFilled = candidates.every(
-            (c) =>
-                scoresRef.current[c.candidate_id] !== undefined &&
-                scoresRef.current[c.candidate_id] !== ""
-        );
+        const allScoresFilled = candidates.every((c) => {
+            const candidateScores = scoresRef.current[c.candidate_id];
+            if (!candidateScores) return false;
+            return subCriteria.every(
+                (sub) =>
+                    candidateScores[sub.key] !== undefined &&
+                    candidateScores[sub.key] !== ""
+            );
+        });
 
         const handleSubmit = () => {
-            const filteredScores = Object.fromEntries(
-                candidates.map((c) => [
-                    c.candidate_id,
-                    scoresRef.current[c.candidate_id] ?? c.existing_score ?? 0,
-                ])
-            );
+            if (submitted) return;
+
+            const filteredScores = {};
+            candidates.forEach((c) => {
+                if (scoresRef.current[c.candidate_id]) {
+                    filteredScores[c.candidate_id] = scoresRef.current[c.candidate_id];
+                }
+            });
 
             if (!judgeId) {
-                alert("Judge ID is missing!");
+                toast.error("Judge ID is missing!");
                 return;
             }
 
-            if (Object.values(filteredScores).some((s) => s === "")) {
-                alert("Please fill in all scores before submitting!");
+            if (Object.keys(filteredScores).length !== candidates.length) {
+                toast.error("Please fill in all scores before submitting!");
                 return;
             }
 
             router.post(
-                route("delivery.store"),
+                route("final_round.store"),
                 {
                     judge_id: judgeId,
                     scores: filteredScores,
@@ -71,13 +86,12 @@ const Delivery = ({ candidates }) => {
 
         return (
             <div className="flex flex-col items-center gap-6">
-                <CandidateGrid
+                <SubCriteriaGrid
                     candidates={candidates}
-                    maxScore={30}
+                    subCriteria={subCriteria}
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
-                    categoryField="delivery"
                 />
 
                 <ScoreAlertDialog
@@ -86,7 +100,6 @@ const Delivery = ({ candidates }) => {
                     allScoresFilled={allScoresFilled}
                     handleSubmit={handleSubmit}
                     submitted={submitted}
-                    categoryField="delivery"
                 />
             </div>
         );
@@ -96,13 +109,13 @@ const Delivery = ({ candidates }) => {
         {
             title: "Male Candidates",
             value: "male",
-            category: "Male Delivery",
+            category: "Male Final Round",
             content: <TabContent candidates={maleCandidates} />,
         },
         {
-            title: "Female Delivery",
+            title: "Female Candidates",
             value: "female",
-            category: "Female Delivery",
+            category: "Female Final Round",
             content: <TabContent candidates={femaleCandidates} />,
         },
     ];
@@ -118,4 +131,4 @@ const Delivery = ({ candidates }) => {
     );
 };
 
-export default Delivery;
+export default FinalRound;

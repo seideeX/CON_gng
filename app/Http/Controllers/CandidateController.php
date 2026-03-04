@@ -25,9 +25,9 @@ class CandidateController extends Controller
 
         $judgeId = $user->id;
 
-        // Load existing scores for the logged-in judge
+        // Load existing scores for the logged-in judge (use _total field)
         $scores = TopFiveSelectionScore::where('judge_id', $judgeId)
-            ->pluck($categoryField, 'candidate_id');
+            ->pluck($categoryField . '_total', 'candidate_id');
 
         // Attach existing score to each candidate
         foreach ($candidates as $candidate) {
@@ -37,6 +37,11 @@ class CandidateController extends Controller
         return Inertia::render($view, [
             'candidates' => $candidates,
         ]);
+    }
+
+    public function evening_gown()
+    {
+        return $this->renderCategory('Categories/EveningGown', 'evening_gown');
     }
 
     public function production_number()
@@ -49,13 +54,8 @@ class CandidateController extends Controller
         return $this->renderCategory('Categories/CasualWear', 'casual_wear');
     }
 
-    public function swim_wear()
+    public function swimsuit()
     {
-        return $this->renderCategory('Categories/SwimWear', 'swim_wear');
-    }
-
-    public function formal_wear()
-    {
-        return $this->renderCategory('Categories/FormalWear', 'formal_wear');
+        return $this->renderCategory('Categories/Swimsuit', 'swimsuit');
     }
 }
