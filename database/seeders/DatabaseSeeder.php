@@ -20,7 +20,7 @@ public function run(): void
         ]);
 
         // Create 5 judges
-        User::factory()->count(5)->sequence(
+        User::factory()->count(7)->sequence(
             fn($sequence) => [
                 'name' => 'judge_' . ($sequence->index + 1),
                 'email' => 'judge' . ($sequence->index + 1) . '@gmail.com',
@@ -28,9 +28,7 @@ public function run(): void
                 'role' => 'judge',
             ]
         )->create();
-
         $this->call(CandidateSeeder::class);
-
         //$this->call(TopFiveSelectionScoreSeeder::class);
     }
 
