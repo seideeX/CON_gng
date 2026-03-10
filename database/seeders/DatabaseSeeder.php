@@ -13,8 +13,8 @@ public function run(): void
     {
         // Create 1 admin
         User::factory()->create([
-            'name' => 'Reycarl',
-            'email' => 'reycarl@gmail.com',
+            'name' => 'PITON-ISU',
+            'email' => 'piton@gmail.com',
             'password' => Hash::make('123'),
             'role' => 'admin',
         ]);
@@ -31,7 +31,7 @@ public function run(): void
 
         $this->call(CandidateSeeder::class);
 
-        $this->call(TopFiveSelectionScoreSeeder::class);
+        //$this->call(TopFiveSelectionScoreSeeder::class);
     }
 
 }

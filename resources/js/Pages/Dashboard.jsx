@@ -19,15 +19,20 @@ export default function Dashboard({ auth }) {
     return (
         <PageLayout user={auth?.user}>
             <div className="relative flex-1 w-full h-full rounded-xl overflow-hidden">
-                {/* 🌌 Starry background */}
-                <StarsBackground
-                    starColor="#ffffff"
-                    className={cn(
-                        "absolute inset-0 w-full h-full",
-                        "dark:bg-[radial-gradient(ellipse_at_bottom,_#0a192f_0%,_#000000_60%,_#000000_100%)]",
-                        "bg-black"
-                    )}
-                />
+
+                {/* 🎥 Video Background */}
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                >
+                    <source src="/con_video.mp4" type="video/mp4" />
+                </video>
+
+                {/* Optional dark overlay for readability */}
+                <div className="absolute inset-0 bg-black/60"></div>
 
                 {/* 🌟 Centered content */}
                 <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-4 text-center text-white">
