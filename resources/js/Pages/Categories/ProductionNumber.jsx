@@ -8,7 +8,7 @@ import SubCriteriaGrid from "./Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const ProductionNumber = ({ candidates }) => {
+const ProductionNumber = ({ candidates, scores }) => {
     const judgeId = usePage().props.auth.user.id;
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
@@ -17,7 +17,11 @@ const ProductionNumber = ({ candidates }) => {
 
     const subCriteria = [
         { key: "energy_performance", label: "Energy & Performance", max: 30 },
-        { key: "mastery_choreography", label: "Mastery of Choreography", max: 25 },
+        {
+            key: "mastery_choreography",
+            label: "Mastery of Choreography",
+            max: 25,
+        },
         { key: "stage_presence", label: "Stage Presence", max: 20 },
         { key: "facial_expression", label: "Facial Expression", max: 15 },
         { key: "overall_impact", label: "Overall Impact", max: 10 },
@@ -41,7 +45,7 @@ const ProductionNumber = ({ candidates }) => {
             return subCriteria.every(
                 (sub) =>
                     candidateScores[sub.key] !== undefined &&
-                    candidateScores[sub.key] !== ""
+                    candidateScores[sub.key] !== "",
             );
         });
 
@@ -78,7 +82,7 @@ const ProductionNumber = ({ candidates }) => {
                     onError: () => {
                         toast.error("Failed to submit scores. Check console.");
                     },
-                }
+                },
             );
         };
 
@@ -90,6 +94,7 @@ const ProductionNumber = ({ candidates }) => {
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    scores={scores}
                 />
 
                 <ScoreAlertDialog

@@ -27,8 +27,8 @@ class CandidateController extends Controller
 
         // Load existing scores for the logged-in judge (use _total field)
         $scores = TopFiveSelectionScore::where('judge_id', $judgeId)
-            ->pluck($categoryField . '_total', 'candidate_id');
-
+            ->get(['candidate_id', $categoryField, $categoryField . '_total'])
+            ->keyBy('candidate_id');
         // Attach existing score to each candidate
         foreach ($candidates as $candidate) {
             $candidate->existing_score = $scores[$candidate->id] ?? null;
@@ -36,6 +36,7 @@ class CandidateController extends Controller
 
         return Inertia::render($view, [
             'candidates' => $candidates,
+            'scores' => $scores ?? [],
         ]);
     }
 

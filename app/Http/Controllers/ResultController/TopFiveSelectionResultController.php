@@ -21,6 +21,7 @@ class TopFiveSelectionResultController extends Controller
     {
         $results = $this->service->getResultsPerCategory('evening_gown');
 
+
         return Inertia::render('Admin/EveningGownResult', [
             'maleCandidates' => $results['maleCandidates'],
             'femaleCandidates' => $results['femaleCandidates'],

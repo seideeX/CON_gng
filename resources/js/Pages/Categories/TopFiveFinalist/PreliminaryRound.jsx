@@ -8,7 +8,7 @@ import SubCriteriaGrid from "../Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "../Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const PreliminaryRound = ({ candidates }) => {
+const PreliminaryRound = ({ candidates, scores }) => {
     const judgeId = usePage().props.auth.user.id;
 
     const maleCandidates = candidates.filter((c) => c.gender === "male");
@@ -40,7 +40,7 @@ const PreliminaryRound = ({ candidates }) => {
             return subCriteria.every(
                 (sub) =>
                     candidateScores[sub.key] !== undefined &&
-                    candidateScores[sub.key] !== ""
+                    candidateScores[sub.key] !== "",
             );
         });
 
@@ -50,7 +50,8 @@ const PreliminaryRound = ({ candidates }) => {
             const filteredScores = {};
             candidates.forEach((c) => {
                 if (scoresRef.current[c.candidate_id]) {
-                    filteredScores[c.candidate_id] = scoresRef.current[c.candidate_id];
+                    filteredScores[c.candidate_id] =
+                        scoresRef.current[c.candidate_id];
                 }
             });
 
@@ -79,7 +80,7 @@ const PreliminaryRound = ({ candidates }) => {
                     onError: () => {
                         toast.error("Failed to submit scores. Check console.");
                     },
-                }
+                },
             );
         };
 
@@ -91,6 +92,7 @@ const PreliminaryRound = ({ candidates }) => {
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    scores={scores}
                 />
 
                 <ScoreAlertDialog

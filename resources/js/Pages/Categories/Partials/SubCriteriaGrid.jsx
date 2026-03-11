@@ -10,6 +10,7 @@ const SubCriteriaGrid = ({
     scoresRef,
     onScoreChange,
     submitted = false,
+    scores = [],
 }) => {
     return (
         <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -26,6 +27,13 @@ const SubCriteriaGrid = ({
                     (sum, sub) => sum + (candidateScores[sub.key] || 0),
                     0,
                 );
+                const savedScore = scores?.[candidate.id] || null;
+
+                const parsedSubScores = savedScore?.evening_gown
+                    ? JSON.parse(savedScore.evening_gown)
+                    : null;
+
+                const savedTotal = savedScore?.evening_gown_total || null;
 
                 const percentage = (total / 100) * 100;
                 const getScoreColor = (pct) => {
@@ -61,38 +69,73 @@ const SubCriteriaGrid = ({
                                 )}
                                 <div className="mt-4 text-center">
                                     <p className="text-lg font-bold text-blue-400">
-                                        Total: {total.toFixed(1)} / 100
+                                        Total:{" "}
+                                        {Number(savedTotal ?? total).toFixed(1)}{" "}
+                                        / 100
                                     </p>
                                 </div>
                             </div>
 
                             {/* Sub-Criteria Scores */}
-                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {subCriteria.map((sub) => (
-                                    <div
-                                        key={sub.key}
-                                        className="flex flex-col"
-                                    >
-                                        <label className="text-sm text-gray-300 mb-2 font-medium">
-                                            {sub.label}
-                                        </label>
-                                        <ScoreInput
-                                            value={
-                                                candidateScores[sub.key] ?? ""
-                                            }
-                                            onChange={(val) =>
-                                                onScoreChange(
-                                                    candidate.id,
-                                                    sub.key,
-                                                    val,
-                                                )
-                                            }
-                                            max={sub.max}
-                                            disabled={submitted}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                            {parsedSubScores ? (
+                                <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                    {Object.entries(parsedSubScores).map(
+                                        ([key, value]) => {
+                                            // Determine the total for this sub-criteria
+                                            const sub = subCriteria.find(
+                                                (s) => s.key === key,
+                                            );
+                                            const max = sub?.max || 10; // default max if not found
+
+                                            return (
+                                                <div
+                                                    key={key}
+                                                    className="flex flex-col justify-center items-center bg-neutral-800 px-4 py-4 rounded-md shadow hover:shadow-lg transition-shadow duration-200"
+                                                >
+                                                    <span className="text-2xl font-bold text-blue-400 mb-1">
+                                                        {value} / {max}
+                                                    </span>
+                                                    <span className="text-gray-300 capitalize text-sm text-center">
+                                                        {key.replaceAll(
+                                                            "_",
+                                                            " ",
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            );
+                                        },
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {subCriteria.map((sub) => (
+                                        <div
+                                            key={sub.key}
+                                            className="flex flex-col"
+                                        >
+                                            <label className="text-sm text-gray-300 mb-2 font-medium">
+                                                {sub.label}
+                                            </label>
+
+                                            <ScoreInput
+                                                value={
+                                                    candidateScores[sub.key] ??
+                                                    ""
+                                                }
+                                                onChange={(val) =>
+                                                    onScoreChange(
+                                                        candidate.id,
+                                                        sub.key,
+                                                        val,
+                                                    )
+                                                }
+                                                max={sub.max}
+                                                disabled={submitted}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </motion.div>
                 );

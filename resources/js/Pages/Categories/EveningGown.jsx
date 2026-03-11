@@ -8,7 +8,7 @@ import SubCriteriaGrid from "./Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const EveningGown = ({ candidates }) => {
+const EveningGown = ({ candidates, scores }) => {
     const judgeId = usePage().props.auth.user.id;
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
@@ -101,6 +101,7 @@ const EveningGown = ({ candidates }) => {
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    scores={scores}
                 />
 
                 <ScoreAlertDialog

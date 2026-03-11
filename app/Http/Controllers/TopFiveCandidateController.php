@@ -47,9 +47,14 @@ class TopFiveCandidateController extends Controller
                 ];
             });
 
+        $scores = TopFiveScore::where('judge_id', $judgeId)
+            ->get(['candidate_id', $categoryField, $categoryField . '_total'])
+            ->keyBy('candidate_id');
+
         return Inertia::render($view, [
             'candidates' => $candidates,
             'category' => $categoryField,
+            'scores' => $scores ?? [],
         ]);
     }
 

@@ -8,7 +8,7 @@ import SubCriteriaGrid from "./Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const CasualWear = ({ candidates }) => {
+const CasualWear = ({ candidates, scores }) => {
     const judgeId = usePage().props.auth.user.id;
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
@@ -18,8 +18,16 @@ const CasualWear = ({ candidates }) => {
     const subCriteria = [
         { key: "style_fashion", label: "Style & Fashion Sense", max: 30 },
         { key: "confidence_bearing", label: "Confidence & Bearing", max: 25 },
-        { key: "suitability_coordination", label: "Suitability & Coordination", max: 20 },
-        { key: "personality_projection", label: "Personality Projection", max: 15 },
+        {
+            key: "suitability_coordination",
+            label: "Suitability & Coordination",
+            max: 20,
+        },
+        {
+            key: "personality_projection",
+            label: "Personality Projection",
+            max: 15,
+        },
         { key: "overall_impression", label: "Overall Impression", max: 10 },
     ];
 
@@ -41,7 +49,7 @@ const CasualWear = ({ candidates }) => {
             return subCriteria.every(
                 (sub) =>
                     candidateScores[sub.key] !== undefined &&
-                    candidateScores[sub.key] !== ""
+                    candidateScores[sub.key] !== "",
             );
         });
 
@@ -78,7 +86,7 @@ const CasualWear = ({ candidates }) => {
                     onError: () => {
                         toast.error("Failed to submit scores. Check console.");
                     },
-                }
+                },
             );
         };
 
@@ -90,6 +98,7 @@ const CasualWear = ({ candidates }) => {
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    scores={scores}
                 />
 
                 <ScoreAlertDialog

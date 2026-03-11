@@ -8,7 +8,7 @@ import SubCriteriaGrid from "../Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "../Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const FinalRound = ({ candidates }) => {
+const FinalRound = ({ candidates, scores }) => {
     const judgeId = usePage().props.auth.user.id;
 
     const maleCandidates = candidates.filter((c) => c.gender === "male");
@@ -17,9 +17,17 @@ const FinalRound = ({ candidates }) => {
     const scoresRef = useRef({});
 
     const subCriteria = [
-        { key: "intelligence_depth", label: "Intelligence & Depth of Answer", max: 40 },
+        {
+            key: "intelligence_depth",
+            label: "Intelligence & Depth of Answer",
+            max: 40,
+        },
         { key: "communication_skills", label: "Communication Skills", max: 25 },
-        { key: "stage_presence_confidence", label: "Stage Presence & Confidence", max: 20 },
+        {
+            key: "stage_presence_confidence",
+            label: "Stage Presence & Confidence",
+            max: 20,
+        },
         { key: "overall_impact", label: "Overall Impact", max: 15 },
     ];
 
@@ -41,7 +49,7 @@ const FinalRound = ({ candidates }) => {
             return subCriteria.every(
                 (sub) =>
                     candidateScores[sub.key] !== undefined &&
-                    candidateScores[sub.key] !== ""
+                    candidateScores[sub.key] !== "",
             );
         });
 
@@ -51,7 +59,8 @@ const FinalRound = ({ candidates }) => {
             const filteredScores = {};
             candidates.forEach((c) => {
                 if (scoresRef.current[c.candidate_id]) {
-                    filteredScores[c.candidate_id] = scoresRef.current[c.candidate_id];
+                    filteredScores[c.candidate_id] =
+                        scoresRef.current[c.candidate_id];
                 }
             });
 
@@ -80,7 +89,7 @@ const FinalRound = ({ candidates }) => {
                     onError: () => {
                         toast.error("Failed to submit scores. Check console.");
                     },
-                }
+                },
             );
         };
 
@@ -92,6 +101,7 @@ const FinalRound = ({ candidates }) => {
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    scores={scores}
                 />
 
                 <ScoreAlertDialog

@@ -8,7 +8,7 @@ import SubCriteriaGrid from "./Partials/SubCriteriaGrid";
 import ScoreAlertDialog from "./Partials/ScoreAlertDialog";
 import { toast } from "sonner";
 
-const Swimsuit = ({ candidates }) => {
+const Swimsuit = ({ candidates, scores }) => {
     const judgeId = usePage().props.auth.user.id;
     const maleCandidates = candidates.filter((c) => c.gender === "male");
     const femaleCandidates = candidates.filter((c) => c.gender === "female");
@@ -17,7 +17,11 @@ const Swimsuit = ({ candidates }) => {
 
     const subCriteria = [
         { key: "body_proportion", label: "Body Proportion & Fitness", max: 30 },
-        { key: "confidence_stage_presence", label: "Confidence & Stage Presence", max: 25 },
+        {
+            key: "confidence_stage_presence",
+            label: "Confidence & Stage Presence",
+            max: 25,
+        },
         { key: "walk_bearing", label: "Walk & Bearing", max: 20 },
         { key: "poise_composure", label: "Poise & Composure", max: 15 },
         { key: "overall_appeal", label: "Overall Appeal", max: 10 },
@@ -41,7 +45,7 @@ const Swimsuit = ({ candidates }) => {
             return subCriteria.every(
                 (sub) =>
                     candidateScores[sub.key] !== undefined &&
-                    candidateScores[sub.key] !== ""
+                    candidateScores[sub.key] !== "",
             );
         });
 
@@ -78,7 +82,7 @@ const Swimsuit = ({ candidates }) => {
                     onError: () => {
                         toast.error("Failed to submit scores. Check console.");
                     },
-                }
+                },
             );
         };
 
@@ -90,6 +94,7 @@ const Swimsuit = ({ candidates }) => {
                     scoresRef={scoresRef}
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
+                    scores={scores}
                 />
 
                 <ScoreAlertDialog
