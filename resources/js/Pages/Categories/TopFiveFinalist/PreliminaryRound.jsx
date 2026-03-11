@@ -35,7 +35,7 @@ const PreliminaryRound = ({ candidates, scores }) => {
         };
 
         const allScoresFilled = candidates.every((c) => {
-            const candidateScores = scoresRef.current[c.candidate_id];
+            const candidateScores = scoresRef.current[c.id];
             if (!candidateScores) return false;
             return subCriteria.every(
                 (sub) =>
@@ -49,9 +49,9 @@ const PreliminaryRound = ({ candidates, scores }) => {
 
             const filteredScores = {};
             candidates.forEach((c) => {
-                if (scoresRef.current[c.candidate_id]) {
+                if (scoresRef.current[c.id]) {
                     filteredScores[c.candidate_id] =
-                        scoresRef.current[c.candidate_id];
+                        scoresRef.current[c.id];
                 }
             });
 

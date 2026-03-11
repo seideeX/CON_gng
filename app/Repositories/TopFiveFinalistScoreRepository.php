@@ -22,6 +22,8 @@ class TopFiveFinalistScoreRepository
         $record->{$category . '_total'} = $categoryTotal;
 
         // Recalculate total score
+        // Final round starts at zero (no preliminary weight)
+        // Total is just the sum of both rounds without any weighting
         $record->total_score =
             ($record->preliminary_round_total ?? 0) +
             ($record->final_round_total ?? 0);

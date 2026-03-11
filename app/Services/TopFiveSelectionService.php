@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\TopFiveSelectionScore;
 use App\Models\Candidate;
+use App\Models\TopFiveCandidates;
+use App\Models\TopFiveScore;
 
 class TopFiveSelectionService
 {
@@ -81,8 +83,13 @@ class TopFiveSelectionService
             $candidateScoresFromDB = $scores->where('candidate_id', $candidate->id);
             foreach ($candidateScoresFromDB as $score) {
                 if (in_array($score->judge->name, $judgeOrder)) {
-                    // Use the category_total field which contains the sum of sub-criteria
-                    $candidateScores[$score->judge->name] = $score->{$category . '_total'} ?? 0;
+                    $categoryScore = $score->{$category . '_total'} ?? 0;
+                    
+                    // Apply 50% weighting: 50% from category + 50% from preliminary
+                    $preliminaryScore = $this->getPreliminaryScoreForCandidate($score->judge_id, $candidate->id);
+                    $weightedScore = ($categoryScore * 0.5) + ($preliminaryScore * 0.5);
+                    
+                    $candidateScores[$score->judge->name] = $weightedScore;
                 }
             }
 
@@ -96,6 +103,26 @@ class TopFiveSelectionService
         }
 
         return $this->assignRanking($processed);
+    }
+
+    /**
+     * Get preliminary round score for a candidate from a specific judge
+     */
+    private function getPreliminaryScoreForCandidate(int $judgeId, int $candidateId): float
+    {
+        // Check if candidate is in top 5
+        $topFiveCandidate = TopFiveCandidates::where('candidate_id', $candidateId)->first();
+        
+        if (!$topFiveCandidate) {
+            return 0;
+        }
+
+        // Get preliminary score
+        $preliminaryScore = TopFiveScore::where('judge_id', $judgeId)
+            ->where('top_five_id', $topFiveCandidate->id)
+            ->first();
+
+        return $preliminaryScore ? ($preliminaryScore->preliminary_round_total ?? 0) : 0;
     }
 
     public function getTopFiveSelectionResults()
@@ -128,12 +155,17 @@ class TopFiveSelectionService
             // Initialize all categories with 0
             $categoryTotals = array_fill_keys($this->categories, 0);
 
-            // Sum all judges' scores per category (using _total fields)
+            // Sum all judges' scores per category (using _total fields with weighting)
             $candidateScores = $scores->where('candidate_id', $candidate->id);
             foreach ($candidateScores as $score) {
+                // Get preliminary score for weighting
+                $preliminaryScore = $this->getPreliminaryScoreForCandidate($score->judge_id, $candidate->id);
+                
                 foreach ($this->categories as $cat) {
-                    // Use the category_total field which contains the sum of sub-criteria
-                    $categoryTotals[$cat] += $score->{$cat . '_total'} ?? 0;
+                    $categoryScore = $score->{$cat . '_total'} ?? 0;
+                    // Apply 50% weighting: 50% from category + 50% from preliminary
+                    $weightedScore = ($categoryScore * 0.5) + ($preliminaryScore * 0.5);
+                    $categoryTotals[$cat] += $weightedScore;
                 }
             }
 

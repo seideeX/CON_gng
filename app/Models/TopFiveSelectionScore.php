@@ -13,12 +13,15 @@ class TopFiveSelectionScore extends Model
     protected $fillable = [
         'candidate_id',
         'judge_id',
+        'evening_gown',
+        'evening_gown_total',
         'production_number',
+        'production_number_total',
         'casual_wear',
-        'swim_wear', 
-        'formal_wear',
-        'closed_door_interview',
-        'total_score',
+        'casual_wear_total',
+        'swimsuit',
+        'swimsuit_total',
+        'total_scores',
     ];
 
      public function candidate()
