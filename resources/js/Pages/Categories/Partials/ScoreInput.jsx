@@ -32,15 +32,15 @@ const ScoreInput = ({ value, onChange, max, disabled = false }) => {
     };
 
     return (
-        <div className="w-full flex flex-col items-center mt-2">
-            <label className="text-sm text-gray-400 mb-1">Score</label>
+        <div className="w-full flex flex-col items-center">
+            <label className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Score</label>
             <div
-                className="p-[2px] rounded-full w-28 relative"
+                className="p-[2px] rounded-xl w-32 relative"
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
             >
                 <motion.div
-                    className="absolute inset-0 rounded-full"
+                    className="absolute inset-0 rounded-xl"
                     style={{ filter: "blur(3px)" }}
                     animate={{
                         background:
@@ -61,7 +61,7 @@ const ScoreInput = ({ value, onChange, max, disabled = false }) => {
                     }}
                 />
                 {!focused && (
-                    <div className="absolute inset-0 rounded-full bg-neutral-900/20" />
+                    <div className="absolute inset-0 rounded-xl bg-neutral-900/20" />
                 )}
                 <input
                     type="number"
@@ -74,7 +74,7 @@ const ScoreInput = ({ value, onChange, max, disabled = false }) => {
                     onBlur={() => setFocused(false)}
                     placeholder={`0.0 / ${max}`}
                     disabled={disabled}
-                    className="relative z-10 w-full text-center px-4 py-2 rounded-full bg-neutral-900 text-white focus:outline-none focus:bg-neutral-800 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative z-10 w-full text-center px-4 py-3 rounded-xl bg-neutral-900 text-white text-lg font-semibold focus:outline-none focus:bg-neutral-800 appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
             </div>
         </div>
