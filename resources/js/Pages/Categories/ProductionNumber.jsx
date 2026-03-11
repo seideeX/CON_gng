@@ -95,6 +95,7 @@ const ProductionNumber = ({ candidates, scores }) => {
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
                     scores={scores}
+                    category={"production_number"}
                 />
 
                 <ScoreAlertDialog

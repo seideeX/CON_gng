@@ -95,6 +95,7 @@ const Swimsuit = ({ candidates, scores }) => {
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
                     scores={scores}
+                    category={"swimsuit"}
                 />
 
                 <ScoreAlertDialog

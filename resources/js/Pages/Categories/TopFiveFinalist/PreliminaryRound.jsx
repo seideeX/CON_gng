@@ -93,6 +93,7 @@ const PreliminaryRound = ({ candidates, scores }) => {
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
                     scores={scores}
+                    category={"preliminary_round"}
                 />
 
                 <ScoreAlertDialog

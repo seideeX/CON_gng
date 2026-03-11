@@ -102,6 +102,7 @@ const FinalRound = ({ candidates, scores }) => {
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
                     scores={scores}
+                    category={"final_round"}
                 />
 
                 <ScoreAlertDialog

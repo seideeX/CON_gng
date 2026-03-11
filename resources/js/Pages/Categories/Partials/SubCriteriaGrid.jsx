@@ -1,3 +1,4 @@
+// Assuming you pass the current category as a prop, e.g., category="evening_gown"
 "use client";
 
 import React from "react";
@@ -11,6 +12,7 @@ const SubCriteriaGrid = ({
     onScoreChange,
     submitted = false,
     scores = [],
+    category, // <-- new prop for dynamic category
 }) => {
     return (
         <div className="w-full p-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -23,19 +25,23 @@ const SubCriteriaGrid = ({
                     : `/candidates/${genderFolder}/${genderFolder}_${index + 1}.jpg`;
 
                 const candidateScores = scoresRef.current[candidate.id] || {};
+
+                // Dynamically get saved score & sub-scores for this category
+                const savedScore = scores?.[candidate.id] || null;
+                const parsedSubScores = savedScore?.[category]
+                    ? JSON.parse(savedScore[category])
+                    : null;
+                const savedTotal = savedScore?.[`${category}_total`] || null;
+
                 const total = subCriteria.reduce(
                     (sum, sub) => sum + (candidateScores[sub.key] || 0),
                     0,
                 );
-                const savedScore = scores?.[candidate.id] || null;
+                // Convert savedTotal to a number
+                const numericSavedTotal =
+                    savedTotal !== null ? parseFloat(savedTotal) : null;
 
-                const parsedSubScores = savedScore?.evening_gown
-                    ? JSON.parse(savedScore.evening_gown)
-                    : null;
-
-                const savedTotal = savedScore?.evening_gown_total || null;
-
-                const percentage = (total / 100) * 100;
+                const percentage = ((savedTotal ?? total) / 100) * 100;
                 const getScoreColor = (pct) => {
                     if (pct >= 80) return "from-green-500 to-emerald-600";
                     if (pct >= 60) return "from-blue-500 to-cyan-600";
@@ -70,7 +76,9 @@ const SubCriteriaGrid = ({
                                 <div className="mt-4 text-center">
                                     <p className="text-lg font-bold text-blue-400">
                                         Total:{" "}
-                                        {Number(savedTotal ?? total).toFixed(1)}{" "}
+                                        {(numericSavedTotal ?? total).toFixed(
+                                            1,
+                                        )}{" "}
                                         / 100
                                     </p>
                                 </div>
@@ -81,11 +89,10 @@ const SubCriteriaGrid = ({
                                 <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                                     {Object.entries(parsedSubScores).map(
                                         ([key, value]) => {
-                                            // Determine the total for this sub-criteria
                                             const sub = subCriteria.find(
                                                 (s) => s.key === key,
                                             );
-                                            const max = sub?.max || 10; // default max if not found
+                                            const max = sub?.max || 10;
 
                                             return (
                                                 <div
@@ -116,7 +123,6 @@ const SubCriteriaGrid = ({
                                             <label className="text-sm text-gray-300 mb-2 font-medium">
                                                 {sub.label}
                                             </label>
-
                                             <ScoreInput
                                                 value={
                                                     candidateScores[sub.key] ??

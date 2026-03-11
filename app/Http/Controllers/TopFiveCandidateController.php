@@ -15,18 +15,15 @@ class TopFiveCandidateController extends Controller
     protected function renderCategory(string $view, string $categoryField)
     {
         $judgeId = Auth::id();
-
+        $scores = TopFiveScore::where('judge_id', $judgeId)
+            ->get(['top_five_id', $categoryField, $categoryField . '_total'])
+            ->keyBy('top_five_id'); // key by top_five_id, not candidate_id
         $candidates = TopFiveCandidates::with('candidate')
             ->get()
-            ->sortBy(function ($item) {
-                return $item->candidate->candidate_number ?? 0;
-            })
+            ->sortBy(fn($item) => $item->candidate->candidate_number ?? 0)
             ->values()
-            ->map(function ($item) use ($judgeId, $categoryField) {
-                // Fetch score via top_five_id
-                $score = TopFiveScore::where('top_five_id', $item->id)
-                    ->where('judge_id', $judgeId)
-                    ->first();
+            ->map(function ($item) use ($judgeId, $categoryField, $scores) {
+                $score = $scores[$item->id] ?? null;
 
                 return [
                     'id' => $item->id,
@@ -39,17 +36,14 @@ class TopFiveCandidateController extends Controller
                     'gender' => $item->candidate->gender ?? null,
                     $categoryField => $score->{$categoryField . '_total'} ?? null,
                     'has_existing_score' => [
-                        'preliminary_round' => $score->preliminary_round_total ?? null,
-                        'final_round' => $score->final_round_total ?? null,
+                        $categoryField => $score->{$categoryField . '_total'} ?? null,
                     ],
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
                 ];
             });
 
-        $scores = TopFiveScore::where('judge_id', $judgeId)
-            ->get(['candidate_id', $categoryField, $categoryField . '_total'])
-            ->keyBy('candidate_id');
+
 
         return Inertia::render($view, [
             'candidates' => $candidates,

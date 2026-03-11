@@ -99,6 +99,7 @@ const CasualWear = ({ candidates, scores }) => {
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
                     scores={scores}
+                    category={"casual_wear"}
                 />
 
                 <ScoreAlertDialog

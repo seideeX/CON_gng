@@ -102,6 +102,7 @@ const EveningGown = ({ candidates, scores }) => {
                     onScoreChange={handleScoreChange}
                     submitted={submitted}
                     scores={scores}
+                    category={"evening_gown"}
                 />
 
                 <ScoreAlertDialog
