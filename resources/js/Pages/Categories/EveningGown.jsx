@@ -19,7 +19,11 @@ const EveningGown = ({ candidates }) => {
         { key: "elegance_poise", label: "Elegance & Poise", max: 30 },
         { key: "stage_presence", label: "Stage Presence", max: 25 },
         { key: "suitability_gown", label: "Suitability of Gown", max: 20 },
-        { key: "projection_expression", label: "Projection & Expression", max: 15 },
+        {
+            key: "projection_expression",
+            label: "Projection & Expression",
+            max: 15,
+        },
         { key: "overall_impact", label: "Overall Impact", max: 10 },
     ];
 
@@ -41,25 +45,28 @@ const EveningGown = ({ candidates }) => {
             return subCriteria.every(
                 (sub) =>
                     candidateScores[sub.key] !== undefined &&
-                    candidateScores[sub.key] !== ""
+                    candidateScores[sub.key] !== "",
             );
         });
 
         const handleSubmit = () => {
             const filteredScores = {};
+
             candidates.forEach((c) => {
-                if (scoresRef.current[c.id]) {
-                    filteredScores[c.id] = scoresRef.current[c.id];
+                const score = scoresRef.current[c.id];
+
+                if (score !== undefined && score !== null && score !== "") {
+                    filteredScores[c.id] = score;
                 }
             });
 
             if (!judgeId) {
-                alert("Judge ID is missing!");
+                toast.error("Judge ID is missing!");
                 return;
             }
 
             if (Object.keys(filteredScores).length !== candidates.length) {
-                alert("Please fill in all scores before submitting!");
+                toast.warning("Please fill in all scores before submitting!");
                 return;
             }
 
@@ -70,15 +77,19 @@ const EveningGown = ({ candidates }) => {
                     scores: filteredScores,
                 },
                 {
+                    preserveScroll: true,
+
                     onSuccess: () => {
                         toast.success("Scores submitted successfully!");
-                        router.reload();
                         setSubmitted(true);
+                        router.reload({ only: ["scores"] });
                     },
-                    onError: () => {
-                        toast.error("Failed to submit scores. Check console.");
+
+                    onError: (errors) => {
+                        console.error(errors);
+                        toast.error("Failed to submit scores.");
                     },
-                }
+                },
             );
         };
 

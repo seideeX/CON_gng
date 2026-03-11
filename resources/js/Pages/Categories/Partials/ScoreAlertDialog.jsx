@@ -32,7 +32,11 @@ const ScoreAlertDialog = ({
                             ? "opacity-50 cursor-not-allowed"
                             : ""
                     }`}
-                    disabled={!allScoresFilled || submitted}
+                    onClick={(e) => {
+                        if (!allScoresFilled || submitted) {
+                            e.preventDefault();
+                        }
+                    }}
                 >
                     Submit Scores
                 </HoverBorderGradient>
@@ -83,7 +87,14 @@ const ScoreAlertDialog = ({
                                         </div>
                                     </td>
                                     <td className="p-2 border-b border-gray-600 text-center">
-                                        {scoresRef.current[c.id]}
+                                        {scoresRef.current[c.id]
+                                            ? Object.values(
+                                                  scoresRef.current[c.id],
+                                              ).reduce(
+                                                  (a, b) => a + Number(b),
+                                                  0,
+                                              )
+                                            : "-"}
                                     </td>
                                 </tr>
                             ))}
