@@ -47,7 +47,7 @@ class TopFiveSelectionService
 
     public function getResultsPerCategory(string $category)
     {
-        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5'];
+        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5', 'judge_6', 'judge_7'];
 
         // Get all candidates
         $maleCandidatesList = Candidate::where('gender', 'male')->get();

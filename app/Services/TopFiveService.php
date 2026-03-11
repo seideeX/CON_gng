@@ -32,7 +32,7 @@ class TopFiveService
      */
     public function getResultsPerCategory(string $category)
     {
-        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5'];
+        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5', 'judge_6', 'judge_7'];
 
         // Get only top 5 males and females
         $maleCandidatesList = TopFiveCandidates::with('candidate')
@@ -146,7 +146,7 @@ class TopFiveService
 
     public function getTotalResults()
     {
-        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5'];
+        $judgeOrder = ['judge_1', 'judge_2', 'judge_3', 'judge_4', 'judge_5', 'judge_6', 'judge_7'];
 
         $maleCandidatesList = TopFiveCandidates::with('candidate')
             ->whereHas('candidate', fn($q) => $q->where('gender', 'male'))
